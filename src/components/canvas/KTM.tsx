@@ -1,15 +1,27 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef } from "react";
 import * as THREE from "three";
+import { useFrame } from "@react-three/fiber";
 import { usePortfolio } from "@/providers/PortfolioProvider";
-import { createSteel, createMachinedAluminum, createCarbon } from "@/materials";
+import { createSteel, createMachinedAluminum, createCarbon, createWornLeather } from "@/materials";
 
 export default function KTM() {
   const { activeBikePart, setActiveBikePart, playAudio } = usePortfolio();
   const [hoveredPart, setHoveredPart] = useState<'frame' | 'engine' | 'suspension' | 'rear_section' | 'electrical' | null>(null);
 
+  // Group refs for exploded views
+  const frameRef = useRef<THREE.Group>(null);
+  const engineRef = useRef<THREE.Group>(null);
+  const suspensionRef = useRef<THREE.Group>(null);
+  const rearRef = useRef<THREE.Group>(null);
+  const frontRef = useRef<THREE.Group>(null);
+
   // Premium materials
+  const steelMat = useMemo(() => createSteel(), []);
+  const carbonMat = useMemo(() => createCarbon(), []);
+  const aluminumMat = useMemo(() => createMachinedAluminum(), []);
+  const blackLeatherMat = useMemo(() => createWornLeather({ color: new THREE.Color("#111113") }), []);
   
   // Rims: Dark brushed metal
   const darkRimMat = useMemo(() => {
