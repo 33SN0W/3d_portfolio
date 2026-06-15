@@ -1,0 +1,284 @@
+/**
+ * Global Styles — Typography, Colors, Layout
+ *
+ * The design system for Prateek's World.
+ * Every value is a decision. Not a default.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+/* ─── COLOR TOKENS ─────────────────────────────────── */
+:root {
+  --black: #050505;
+  --concrete: #111111;
+  --carbon: #1a1a1a;
+  --steel: #707070;
+  --titanium: #a4a4a4;
+  --warm-white: #f2f2f2;
+  --orange: #ff6900;
+  --orange-glow: #ff8a30;
+
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+}
+
+/* ─── RESET ────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  background: var(--black);
+  color: var(--warm-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: var(--font-display);
+  /* Allow scrolling — the scroll drives the experience */
+  scroll-behavior: smooth;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--black);
+}
+
+/* Prevent selection artifacts — the space is not a document */
+::selection {
+  background: rgba(255, 105, 0, 0.2);
+  color: var(--warm-white);
+}
+
+/* Remove focus outlines on the canvas */
+canvas:focus {
+  outline: none;
+}
+
+/* ─── SCROLL CONTAINER ─────────────────────────────── */
+/* This invisible div creates the scroll height that drives the camera */
+.scroll-container {
+  position: relative;
+  width: 100%;
+  pointer-events: none;
+}
+
+/* ─── CANVAS LAYER ─────────────────────────────────── */
+.canvas-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+}
+
+/* ─── OVERLAY LAYER ────────────────────────────────── */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.overlay a,
+.overlay button {
+  pointer-events: auto;
+}
+
+/* ─── SECTION CONTENT ──────────────────────────────── */
+.section-content {
+  position: absolute;
+  transition: opacity 0.6s cubic-bezier(0.25, 0.0, 0.1, 1.0);
+  will-change: opacity, transform;
+}
+
+.section-content.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.section-content.visible {
+  opacity: 1;
+}
+
+/* ─── TYPOGRAPHY ───────────────────────────────────── */
+
+/* Hero name — the largest type in the space */
+.type-hero {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: clamp(2.5rem, 6vw, 6.5rem);
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+  color: var(--warm-white);
+}
+
+/* Hero subtitle */
+.type-subtitle {
+  font-family: var(--font-mono);
+  font-weight: 300;
+  font-size: clamp(0.75rem, 1.2vw, 0.95rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--titanium);
+  margin-top: 1rem;
+}
+
+/* Section label — small, precise */
+.type-label {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.6875rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+/* Section heading */
+.type-heading {
+  font-family: var(--font-mono);
+  font-weight: bold;
+  font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+  letter-spacing: 0.02em;
+  color: var(--warm-white);
+  text-transform: uppercase;
+}
+
+/* Body text — invisible font, reader sees words not typeface */
+.type-body {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(0.875rem, 1.2vw, 1rem);
+  line-height: 1.65;
+  color: var(--titanium);
+}
+
+/* Monospace — for project indices, technical details */
+.type-mono {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--titanium);
+}
+
+/* Orange accent — used with the discipline of a surgeon */
+.accent {
+  color: var(--orange);
+}
+
+/* ─── NAVIGATION ───────────────────────────────────── */
+.nav-container {
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  align-items: flex-end;
+}
+
+.nav-dot-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  pointer-events: auto;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.nav-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--steel);
+  transition: all 0.4s cubic-bezier(0.25, 0.0, 0.1, 1.0);
+  flex-shrink: 0;
+}
+
+.nav-dot.active {
+  background: var(--orange);
+}
+
+.nav-label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--titanium);
+  opacity: 0;
+  transform: translateX(4px);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.nav-dot-wrapper:hover .nav-label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ─── LINKS ────────────────────────────────────────── */
+.link-subtle {
+  color: var(--titanium);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.05em;
+  transition: color 0.3s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.link-subtle:hover {
+  color: var(--warm-white);
+  border-bottom-color: var(--orange);
+}
+
+/* ─── RESPONSIVE & HUD CURSOR ──────────────────────── */
+@media (pointer: fine) {
+  body, a, button, [role="button"], input, select, textarea {
+    cursor: none !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hud-cursor-circle {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-container {
+    right: 1rem;
+    gap: 1rem;
+  }
+
+  .nav-label {
+    display: none;
+  }
+}
+
+/* ─── ANIMATIONS ────────────────────────────────────── */
+@keyframes pulse {
+  from {
+    opacity: 0.4;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
