@@ -14,8 +14,8 @@ import { getProgress, subscribe, type SectionKey, SECTIONS, scrollToSection } fr
 import { usePortfolio } from "@/providers/PortfolioProvider";
 
 /** Computes section-local progress (0-1) for a given section */
-function useSectionVisibility(sectionKey: SectionKey): { visible: boolean; progress: number } {
-  const [state, setState] = useState({ visible: false, progress: 0 });
+function useSectionVisibility(sectionKey: SectionKey): boolean {
+  const [visible, setVisible] = useState(false);
 
   const update = useCallback(() => {
     const p = getProgress();
@@ -24,11 +24,9 @@ function useSectionVisibility(sectionKey: SectionKey): { visible: boolean; progr
     // Fade in slightly before the section starts, fade out slightly after
     const fadeIn = section.start;
     const fadeOut = section.end;
-    const visible = p >= fadeIn - 0.02 && p <= fadeOut + 0.02;
-    const range = section.end - section.start;
-    const progress = Math.max(0, Math.min(1, (p - section.start) / range));
+    const isVisible = p >= fadeIn - 0.02 && p <= fadeOut + 0.02;
 
-    setState({ visible, progress });
+    setVisible(isVisible);
   }, [sectionKey]);
 
   useEffect(() => {
@@ -36,12 +34,12 @@ function useSectionVisibility(sectionKey: SectionKey): { visible: boolean; progr
     return subscribe(update);
   }, [update]);
 
-  return state;
+  return visible;
 }
 
 // ─── PADDOCK (HERO) SECTION ───────────────────────────
 function PaddockSection() {
-  const { visible } = useSectionVisibility("PADDOCK");
+  const visible = useSectionVisibility("PADDOCK");
   const [appeared, setAppeared] = useState(false);
 
   useEffect(() => {
@@ -53,7 +51,7 @@ function PaddockSection() {
 
   return (
     <div
-      className={`section-content ${visible ? "visible" : "hidden"}`}
+      className={`section-content hud-card ${visible ? "visible" : "hidden"}`}
       style={{
         bottom: "12vh",
         left: "6vw",
@@ -64,7 +62,22 @@ function PaddockSection() {
       <div style={{ color: "var(--steel)", fontFamily: "var(--font-mono)", fontSize: "9px", letterSpacing: "0.15em", marginBottom: "12px" }}>
         SPECIFICATION SHEET // SECTOR 1 // PADDOCK
       </div>
-      <h1 className="type-hero" style={{ letterSpacing: "-0.02em", lineHeight: "1.0", margin: "0 0 12px 0" }}>PRATEEK</h1>
+      <h1 
+        className="type-hero" 
+        style={{ 
+          fontFamily: "var(--font-display)", 
+          fontWeight: 900, 
+          fontStyle: "italic", 
+          letterSpacing: "-0.04em", 
+          lineHeight: "0.95", 
+          margin: "0 0 12px 0", 
+          color: "#ffffff",
+          textShadow: "0 0 15px rgba(255, 80, 0, 0.65), 0 0 30px rgba(255, 80, 0, 0.3)",
+          textTransform: "uppercase"
+        }}
+      >
+        PRATEEK
+      </h1>
       
       <div style={{ borderTop: "1px solid #1c1c1f", paddingTop: "12px", display: "flex", flexDirection: "column", gap: "6px", fontFamily: "var(--font-mono)", fontSize: "10px" }}>
         <div>
@@ -94,7 +107,7 @@ function PaddockSection() {
 
 // ─── GARAGE (SKILLS & SETUP) SECTION ──────────────────
 function GarageSection() {
-  const { visible } = useSectionVisibility("GARAGE");
+  const visible = useSectionVisibility("GARAGE");
 
   // Timing screen colors: purple (#d100d1), green (#00d100), yellow (#ffff00)
   const skills = [
@@ -106,7 +119,7 @@ function GarageSection() {
 
   return (
     <div
-      className={`section-content ${visible ? "visible" : "hidden"}`}
+      className={`section-content hud-card ${visible ? "visible" : "hidden"}`}
       style={{
         top: "14vh",
         right: "6vw",
@@ -160,11 +173,11 @@ function GarageSection() {
 
 // ─── STATIONS OF DEPLOYMENT (EXPERIENCE) ────────────────
 function RaceHistorySection() {
-  const { visible } = useSectionVisibility("RACE_HISTORY");
+  const visible = useSectionVisibility("RACE_HISTORY");
 
   return (
     <div
-      className={`section-content ${visible ? "visible" : "hidden"}`}
+      className={`section-content hud-card ${visible ? "visible" : "hidden"}`}
       style={{
         top: "14vh",
         left: "6vw",
@@ -232,7 +245,7 @@ function RaceHistorySection() {
 
 // ─── TROPHY WALL (PHILOSOPHY WALL) SECTION ────────────
 function TrophyWallSection() {
-  const { visible } = useSectionVisibility("TROPHY_WALL");
+  const visible = useSectionVisibility("TROPHY_WALL");
 
   const principles = [
     "01 // Measure twice before optimizing once.",
@@ -244,7 +257,7 @@ function TrophyWallSection() {
 
   return (
     <div
-      className={`section-content ${visible ? "visible" : "hidden"}`}
+      className={`section-content hud-card ${visible ? "visible" : "hidden"}`}
       style={{
         top: "14vh",
         right: "6vw",
@@ -290,7 +303,7 @@ function TrophyWallSection() {
 
 // ─── PIT WALL RADIO (CONTACT) SECTION ─────────────────
 function PitWallRadioSection() {
-  const { visible } = useSectionVisibility("PIT_WALL");
+  const visible = useSectionVisibility("PIT_WALL");
   const [isExporting, setIsExporting] = useState(false);
   const [exportProgress, setExportProgress] = useState(0);
   const { playAudio } = usePortfolio();
@@ -320,7 +333,7 @@ function PitWallRadioSection() {
 
   return (
     <div
-      className={`section-content ${visible ? "visible" : "hidden"}`}
+      className={`section-content hud-card ${visible ? "visible" : "hidden"}`}
       style={{
         bottom: "12vh",
         left: "6vw",
@@ -636,13 +649,11 @@ function PosterModal() {
 function HUDOverlay() {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isLoadingComplete, setIsLoadingComplete] = useState(false);
-  const [lapTime, setLapTime] = useState("00:00.000");
-  const [mousePos, setMousePos] = useState({ x: -100, y: -100 });
-  const [isHovering, setIsHovering] = useState(false);
-  const [trackDot, setTrackDot] = useState({ x: 0, y: 0 });
   
   const pathRef = useRef<SVGPathElement>(null);
-
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const circleRef = useRef<SVGCircleElement>(null);
+  
   // 1. Loading Manager Status
   useEffect(() => {
     THREE.DefaultLoadingManager.onStart = () => {
@@ -667,31 +678,14 @@ function HUDOverlay() {
     return () => clearTimeout(timer);
   }, []);
 
-  // 2. Lap Timer Stopwatch (tied to scroll)
+  // 3. HUD Cursor Tracking (direct DOM style modification to avoid React re-renders)
   useEffect(() => {
-    let animId: number;
-    const updateTimer = () => {
-      const p = getProgress();
-      const totalLapSeconds = 105.320; // 1:45.320 F1 lap time
-      const currentSeconds = p * totalLapSeconds;
-      
-      const ms = Math.floor(performance.now() % 1000);
-      const mins = Math.floor(currentSeconds / 60);
-      const secs = Math.floor(currentSeconds % 60);
-      
-      setLapTime(
-        `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}.${String(ms).padStart(3, "0")}`
-      );
-      animId = requestAnimationFrame(updateTimer);
-    };
-    animId = requestAnimationFrame(updateTimer);
-    return () => cancelAnimationFrame(animId);
-  }, []);
+    const cursor = cursorRef.current;
+    if (!cursor) return;
 
-  // 3. HUD Cursor Tracking
-  useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
+      cursor.style.left = `${e.clientX}px`;
+      cursor.style.top = `${e.clientY}px`;
     };
     const onMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -700,7 +694,13 @@ function HUDOverlay() {
         target.tagName === "BUTTON" ||
         target.style.cursor === "pointer" ||
         target.closest(".nav-dot-wrapper");
-      setIsHovering(!!interactive);
+      if (interactive) {
+        cursor.style.width = "24px";
+        cursor.style.height = "24px";
+      } else {
+        cursor.style.width = "12px";
+        cursor.style.height = "12px";
+      }
     };
 
     window.addEventListener("mousemove", onMouseMove);
@@ -711,16 +711,18 @@ function HUDOverlay() {
     };
   }, []);
 
-  // 4. Track Map progress dot
+  // 4. Track Map progress dot (direct DOM modification to avoid React re-renders)
   useEffect(() => {
     const path = pathRef.current;
-    if (!path) return;
+    const circle = circleRef.current;
+    if (!path || !circle) return;
     const length = path.getTotalLength();
 
     const updateTrackDot = () => {
       const p = getProgress();
       const point = path.getPointAtLength(p * length);
-      setTrackDot({ x: point.x, y: point.y });
+      circle.setAttribute("cx", String(point.x));
+      circle.setAttribute("cy", String(point.y));
     };
 
     updateTrackDot();
@@ -731,14 +733,15 @@ function HUDOverlay() {
     <>
       {/* HUD Cursor (Only desktop / pointer: fine) */}
       <div
+        ref={cursorRef}
         className="hud-cursor-circle"
         style={{
           position: "fixed",
-          left: mousePos.x,
-          top: mousePos.y,
+          left: "-100px",
+          top: "-100px",
           transform: "translate(-50%, -50%)",
-          width: isHovering ? "24px" : "12px",
-          height: isHovering ? "24px" : "12px",
+          width: "12px",
+          height: "12px",
           border: "1px solid var(--orange)",
           borderRadius: "50%",
           pointerEvents: "none",
@@ -746,13 +749,11 @@ function HUDOverlay() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          transition: "width(0.15s) ease, height(0.15s) ease",
+          transition: "width 0.15s ease, height 0.15s ease",
         }}
       >
         <div style={{ width: "2px", height: "2px", background: "var(--orange)", borderRadius: "50%" }} />
       </div>
-
-
 
       {/* Bottom Left: System Status HUD */}
       <div
@@ -784,7 +785,7 @@ function HUDOverlay() {
         </span>
       </div>
 
-      {/* Bottom Right: Silverstone Circuit F1 Track Map */}
+      {/* Bottom Right: Red Bull Ring F1 Track Map */}
       <div
         style={{
           position: "fixed",
@@ -798,23 +799,24 @@ function HUDOverlay() {
         }}
       >
         <div style={{ color: "var(--steel)", fontFamily: "var(--font-mono)", fontSize: "8px", letterSpacing: "0.12em" }}>
-          SILVERSTONE GP // PROGRESS
+          RED BULL RING // PROGRESS
         </div>
-        <div style={{ position: "relative", width: "120px", height: "80px" }}>
-          <svg width="120" height="80" viewBox="0 0 120 80">
+        <div style={{ position: "relative", width: "120px", height: "90px" }}>
+          <svg width="100%" height="100%" viewBox="0 0 500 500">
             <path
               ref={pathRef}
-              d="M 35,70 C 15,70 10,55 15,45 C 20,35 35,25 45,20 C 60,15 75,5 90,5 C 105,5 110,15 110,30 C 110,45 95,55 80,60 C 65,65 55,70 35,70 Z"
+              d="m460.715 363.195-2.743-3.298a30.76 30.76 0 0 0-12.787-9.099c-28.347-10.668-144.043-54.216-165.073-62.172-13.48-5.1-22.998-7.179-32.852-7.179-5.879 0-11.594.738-18.21 1.596l-2.824.363c-8.696 1.11-20.316 6.554-34.534 16.184-8.62 5.83-20.474 5.84-29.11.021a29.4 29.4 0 0 1-12.78-20.936l-7.272-61.646c-1.018-8.633 2.157-17.355 8.487-23.334l1.86-1.755c8.862-8.359 22.983-10.006 33.548-3.884 19.288 11.183 45.635 26.677 61.63 36.976 8.58 5.526 18.928 8.327 30.755 8.327 15.27 0 30.606-4.538 42.93-8.186l4.69-1.375c4.92-1.426 10.12-3.745 15.456-6.902 7.347-4.344 11.499-12.308 10.835-20.784s-6.007-15.705-13.948-18.86c-23.266-9.244-52.174-22.847-67.334-30.133a141 141 0 0 1-18.173-10.464C231.21 121.637 175.9 87.962 144.892 69.226a249.5 249.5 0 0 0-42.344-20.384C85.92 42.69 66.59 36.02 53.302 31.505c-6-2.038-12.657.313-16.084 5.56-2.551 3.899-2.942 8.787-1.045 13.07l29.974 67.736a185.7 185.7 0 0 1 15.662 64.962c.59 10.464 1.068 21.278 1.45 31.462a620 620 0 0 0 12.985 104.718l21.938 103.591c2.045 9.648 10.025 16.85 19.858 17.92l259.13 28.244c1.606.175 3.22.303 4.833.359a185 185 0 0 0 6.026.102c18.269 0 30.411-2.982 37.379-5.485 7.615-2.736 12.981-9.75 13.67-17.87l5.856-69.273a18.42 18.42 0 0 0-4.22-13.406z"
               fill="none"
               stroke="#2e2e30"
-              strokeWidth="2.5"
+              strokeWidth="8"
             />
             <circle
-              cx={trackDot.x}
-              cy={trackDot.y}
-              r="3.5"
+              ref={circleRef}
+              cx="0"
+              cy="0"
+              r="12"
               fill="var(--orange)"
-              style={{ filter: "drop-shadow(0 0 3px var(--orange))" }}
+              style={{ filter: "drop-shadow(0 0 15px var(--orange))" }}
             />
           </svg>
         </div>

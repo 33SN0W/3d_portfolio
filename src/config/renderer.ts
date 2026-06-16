@@ -5,7 +5,7 @@
  * No defaults. No guesses.
  */
 
-import { ACESFilmicToneMapping, PCFSoftShadowMap, SRGBColorSpace } from "three";
+import { ACESFilmicToneMapping, PCFShadowMap, SRGBColorSpace } from "three";
 
 export const rendererConfig = {
   /** ACES filmic — cinema-grade highlight rolloff. Matches BR2049 reference. */
@@ -21,7 +21,7 @@ export const rendererConfig = {
   shadows: true,
 
   /** Soft penumbra matching the 30–40mm falloff specified in the lighting package. */
-  shadowMapType: PCFSoftShadowMap,
+  shadowMapType: PCFShadowMap,
 
   /** Retina support capped at 2x. Beyond 2x is waste with no visual gain. */
   pixelRatio: typeof window !== "undefined" ? Math.min(window.devicePixelRatio, 2) : 1,

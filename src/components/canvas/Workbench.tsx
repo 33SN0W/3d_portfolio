@@ -17,7 +17,7 @@ import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { useTexture, Html, Text } from "@react-three/drei";
 import { usePortfolio } from "@/providers/PortfolioProvider";
-import { LIVERIES } from "@/config/colors";
+import { LIVERIES, LiveryType } from "@/config/colors";
 import {
   createConcrete,
   createBrushedAluminum,
@@ -28,9 +28,9 @@ import {
   createSmokedGlass,
 } from "@/materials";
 
-function useWalnutTexture() {
+function useWalnutTexture(mounted: boolean) {
   return useMemo(() => {
-    if (typeof document === "undefined") return null;
+    if (!mounted || typeof document === "undefined") return null;
     const canvas = document.createElement("canvas");
     canvas.width = 512;
     canvas.height = 512;
@@ -72,12 +72,13 @@ function useWalnutTexture() {
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(1.5, 1.5);
     return texture;
-  }, []);
+  }, [mounted]);
 }
 
 // ─── NOTEBOOK TEXTURE ────────────────────────────────────
-function useNotebookTexture() {
+function useNotebookTexture(mounted: boolean) {
   return useMemo(() => {
+    if (!mounted || typeof document === "undefined") return null;
     const canvas = document.createElement("canvas");
     canvas.width = 512;
     canvas.height = 512;
@@ -142,12 +143,13 @@ function useNotebookTexture() {
     const texture = new THREE.CanvasTexture(canvas);
     texture.needsUpdate = true;
     return texture;
-  }, []);
+  }, [mounted]);
 }
 
 // ─── BLUEPRINT TEXTURES ──────────────────────────────────
-function useBlueprintTexture(isResume: boolean) {
+function useBlueprintTexture(isResume: boolean, mounted: boolean) {
   return useMemo(() => {
+    if (!mounted || typeof document === "undefined") return null;
     const canvas = document.createElement("canvas");
     canvas.width = 1024;
     canvas.height = 1448; // A4 aspect ratio
@@ -315,15 +317,15 @@ function useBlueprintTexture(isResume: boolean) {
     const texture = new THREE.CanvasTexture(canvas);
     texture.needsUpdate = true;
     return texture;
-  }, [isResume]);
+  }, [isResume, mounted]);
 }
 
 
 
-// ─── BRAKE ROTOR (Desk item) ─────────────────────────────
-function BrakeRotor({ position, rotation, material }: { position: [number, number, number]; rotation: [number, number, number]; material: THREE.MeshPhysicalMaterial }) {
+// ─── GLOWING BRAKE ROTOR LAMP (Desk item) ────────────────
+function BrakeRotorLamp({ position, rotation, steelMat, aluminumMat }: { position: [number, number, number]; rotation: [number, number, number]; steelMat: THREE.Material; aluminumMat: THREE.Material }) {
   const rotorGeo = useMemo(() => {
-    const outerR = 0.08; // Scaled down slightly to fit on the desk naturally
+    const outerR = 0.08;
     const innerR = 0.035;
     const thickness = 0.005;
     const segments = 32;
@@ -358,15 +360,272 @@ function BrakeRotor({ position, rotation, material }: { position: [number, numbe
     return new THREE.ExtrudeGeometry(shape, extrudeSettings);
   }, []);
 
+  const baseStandMat = useMemo(() => {
+    return new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color("#111112"),
+      roughness: 0.7,
+      metalness: 0.2,
+    });
+  }, []);
+
+  const orangeEmissiveMat = useMemo(() => {
+    return new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color("#ff3000"),
+      emissive: new THREE.Color("#ff4000"),
+      emissiveIntensity: 6.0,
+      roughness: 0.1,
+    });
+  }, []);
+
   return (
-    <mesh
-      geometry={rotorGeo}
-      rotation={rotation}
-      position={position}
-      castShadow
-      receiveShadow
-      material={material}
-    />
+    <group position={position} rotation={rotation}>
+      {/* 2 black support stand feet */}
+      <mesh position={[-0.045, -0.09, 0]} material={baseStandMat}>
+        <boxGeometry args={[0.015, 0.02, 0.06]} />
+      </mesh>
+      <mesh position={[0.045, -0.09, 0]} material={baseStandMat}>
+        <boxGeometry args={[0.015, 0.02, 0.06]} />
+      </mesh>
+      {/* Curved stand upright connecting bracket */}
+      <mesh position={[0, -0.06, -0.01]} material={baseStandMat}>
+        <boxGeometry args={[0.1, 0.05, 0.02]} />
+      </mesh>
+
+      {/* Main Rotor Disc */}
+      <mesh geometry={rotorGeo} position={[0, 0, 0]} castShadow receiveShadow material={steelMat} />
+
+      {/* Brake Caliper (silver/grey) mounted on right-front */}
+      <group position={[0.076, 0.012, 0.002]} rotation={[0, 0, -Math.PI / 12]}>
+        <mesh castShadow material={aluminumMat}>
+          <boxGeometry args={[0.024, 0.062, 0.036]} />
+        </mesh>
+        {/* Caliper center cutout */}
+        <mesh position={[0, 0, 0]} material={baseStandMat}>
+          <boxGeometry args={[0.025, 0.03, 0.015]} />
+        </mesh>
+      </group>
+
+      {/* Glowing center hub ring */}
+      <mesh position={[0, 0, -0.015]} material={orangeEmissiveMat}>
+        <torusGeometry args={[0.038, 0.008, 8, 24]} />
+      </mesh>
+
+      {/* Backplate light mask (glow washes out from slots) */}
+      <mesh position={[0, 0, -0.008]} rotation={[Math.PI / 2, 0, 0]} material={baseStandMat}>
+        <cylinderGeometry args={[0.08, 0.08, 0.004, 24]} />
+      </mesh>
+
+      {/* Active PointLight source casting light onto the desk surface */}
+      <pointLight color="#ff4000" intensity={2.5} distance={1.2} decay={2.0} position={[0, 0, 0.04]} />
+    </group>
+  );
+}
+
+// ─── SHOEI HELMET (Desk item) ───────────────────────────
+function ShoeiHelmet({ position, rotation, scale = 1 }: { position: [number, number, number]; rotation: [number, number, number]; scale?: number }) {
+  const shellMat = useMemo(() => {
+    return new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color("#eceff1"), // Glossy white paint
+      roughness: 0.08,
+      metalness: 0.15,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.05,
+    });
+  }, []);
+
+  const visorMat = useMemo(() => {
+    return new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color("#0c0c0e"), // Smoked dark visor
+      transmission: 0.6,
+      opacity: 0.9,
+      roughness: 0.05,
+      metalness: 0.1,
+      transparent: true,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.02,
+    });
+  }, []);
+
+  const blackTrimMat = useMemo(() => {
+    return new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color("#0f0f10"),
+      roughness: 0.6,
+      metalness: 0.1,
+    });
+  }, []);
+
+  const orangeDecalMat = useMemo(() => {
+    return new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color("#ff5000"),
+      roughness: 0.2,
+      metalness: 0.8,
+    });
+  }, []);
+
+  return (
+    <group position={position} rotation={rotation} scale={scale}>
+      {/* Stretched aerodynamic inner group */}
+      <group scale={[0.96, 1.0, 1.08]}>
+        {/* Main outer shell structure */}
+        <mesh castShadow>
+          <sphereGeometry args={[0.065, 32, 32, 0, Math.PI * 2, 0, Math.PI * 0.72]} />
+          <primitive object={shellMat} attach="material" />
+        </mesh>
+        
+        {/* Sleek cohesive chin bar - cylinder segment following sphere curvature */}
+        <mesh castShadow position={[0, -0.026, 0.018]} rotation={[0.16, 0, 0]} material={shellMat}>
+          <cylinderGeometry args={[0.064, 0.062, 0.038, 24, 1, true, -Math.PI / 2.3, Math.PI / 1.15]} />
+        </mesh>
+        
+        {/* Base rubber neck trim roll */}
+        <mesh position={[0, -0.048, -0.01]} rotation={[0.08, 0, 0]} material={blackTrimMat}>
+          <torusGeometry args={[0.058, 0.006, 8, 24]} />
+        </mesh>
+        
+        {/* Chin splitter aerodynamic winglet */}
+        <mesh position={[0, -0.045, 0.04]} rotation={[0.1, 0, 0]} material={blackTrimMat}>
+          <cylinderGeometry args={[0.063, 0.063, 0.006, 16, 1, true, -Math.PI / 3, Math.PI / 1.5]} />
+        </mesh>
+        
+        {/* Black chin vent intake */}
+        <mesh position={[0, -0.024, 0.075]} material={blackTrimMat}>
+          <boxGeometry args={[0.016, 0.014, 0.005]} />
+        </mesh>
+
+        {/* Visor seal / eyeport black rubber gasket */}
+        <mesh position={[0, 0.008, 0.035]} rotation={[0.2, 0, 0]} material={blackTrimMat}>
+          <cylinderGeometry args={[0.063, 0.063, 0.034, 24, 1, true, -Math.PI / 2.7, Math.PI / 1.35]} />
+        </mesh>
+
+        {/* Visor lens */}
+        <mesh position={[0, 0.008, 0.038]} rotation={[0.2, 0, 0]} material={visorMat}>
+          <cylinderGeometry args={[0.061, 0.061, 0.032, 24, 1, true, -Math.PI / 2.8, Math.PI / 1.4]} />
+        </mesh>
+        
+        {/* Visor lift tab (bottom-left) */}
+        <mesh position={[0.035, -0.01, 0.052]} rotation={[0.2, 0.4, 0.1]} material={blackTrimMat}>
+          <boxGeometry args={[0.008, 0.004, 0.004]} />
+        </mesh>
+
+        {/* Visor mounting gear pivot plates */}
+        <mesh position={[0.061, 0.008, 0]} rotation={[0, Math.PI / 2, 0]} material={blackTrimMat}>
+          <cylinderGeometry args={[0.008, 0.008, 0.005, 12]} />
+        </mesh>
+        <mesh position={[-0.061, 0.008, 0]} rotation={[0, Math.PI / 2, 0]} material={blackTrimMat}>
+          <cylinderGeometry args={[0.008, 0.008, 0.005, 12]} />
+        </mesh>
+        
+        {/* Pivot plates metallic details */}
+        <mesh position={[0.063, 0.008, 0]} rotation={[0, Math.PI / 2, 0]}>
+          <cylinderGeometry args={[0.004, 0.004, 0.003, 12]} />
+          <meshStandardMaterial color="#888" roughness={0.1} metalness={0.9} />
+        </mesh>
+        <mesh position={[-0.063, 0.008, 0]} rotation={[0, Math.PI / 2, 0]}>
+          <cylinderGeometry args={[0.004, 0.004, 0.003, 12]} />
+          <meshStandardMaterial color="#888" roughness={0.1} metalness={0.9} />
+        </mesh>
+
+        {/* Ventilation slots on top of helmet */}
+        <mesh position={[0.02, 0.05, 0.02]} rotation={[0.4, 0.2, 0]} material={blackTrimMat}>
+          <boxGeometry args={[0.012, 0.005, 0.024]} />
+        </mesh>
+        <mesh position={[-0.02, 0.05, 0.02]} rotation={[0.4, -0.2, 0]} material={blackTrimMat}>
+          <boxGeometry args={[0.012, 0.005, 0.024]} />
+        </mesh>
+
+        {/* Sleek rear spoiler stabilizer winglet */}
+        <mesh position={[0, 0.016, -0.052]} rotation={[-0.25, 0, 0]} material={shellMat}>
+          <boxGeometry args={[0.054, 0.012, 0.03]} />
+        </mesh>
+        <mesh position={[0, 0.022, -0.06]} rotation={[-0.3, 0, 0]} material={orangeDecalMat}>
+          <boxGeometry args={[0.048, 0.008, 0.02]} />
+        </mesh>
+        
+        {/* Decals: High speed side livery lines */}
+        <mesh position={[0.032, 0.022, 0.022]} rotation={[0.2, 0.4, 0.3]} material={orangeDecalMat}>
+          <boxGeometry args={[0.008, 0.0015, 0.07]} />
+        </mesh>
+        <mesh position={[-0.032, 0.022, 0.022]} rotation={[0.2, -0.4, -0.3]} material={orangeDecalMat}>
+          <boxGeometry args={[0.008, 0.0015, 0.07]} />
+        </mesh>
+
+        {/* Forehead Logo decal block */}
+        <mesh position={[0, 0.044, 0.046]} rotation={[0.32, 0, 0]} material={blackTrimMat}>
+          <boxGeometry args={[0.018, 0.008, 0.002]} />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+
+// ─── FRAMED GALLERY POSTER ──────────────────────────────
+function FramedPoster({ 
+  position, 
+  rotation, 
+  args, 
+  material, 
+  onClick, 
+  onPointerOver, 
+  onPointerOut,
+  steelMat,
+  frameMat,
+  paperColor = "#f4f0ea"
+}: { 
+  position: [number, number, number]; 
+  rotation: [number, number, number]; 
+  args: [number, number]; 
+  material: THREE.Material; 
+  onClick: (e: any) => void;
+  onPointerOver: (e: any) => void;
+  onPointerOut: (e: any) => void;
+  steelMat: THREE.Material;
+  frameMat: THREE.Material;
+  paperColor?: string;
+}) {
+  const [w, h] = args;
+  const border = 0.02; // 2cm frame border thickness
+  const glassMat = useMemo(() => {
+    return new THREE.MeshStandardMaterial({
+      color: new THREE.Color("#ffffff"),
+      roughness: 0.05,
+      metalness: 0.95,
+      transparent: true,
+      opacity: 0.18,
+    });
+  }, []);
+
+  return (
+    <group position={position} rotation={rotation}>
+      {/* Black Frame Backing */}
+      <mesh castShadow receiveShadow material={frameMat}>
+        <boxGeometry args={[w + border * 2, h + border * 2, 0.014]} />
+      </mesh>
+
+      {/* Solid Backing Paper Sheet */}
+      <mesh position={[0, 0, 0.004]}>
+        <planeGeometry args={[w, h]} />
+        <meshBasicMaterial color={paperColor} />
+      </mesh>
+      
+      {/* Poster Page print */}
+      <mesh position={[0, 0, 0.008]} material={material} onClick={onClick} onPointerOver={onPointerOver} onPointerOut={onPointerOut}>
+        <planeGeometry args={[w, h]} />
+      </mesh>
+
+      {/* Reflective Glass overlay */}
+      <mesh position={[0, 0, 0.009]} material={glassMat}>
+        <planeGeometry args={[w, h]} />
+      </mesh>
+
+      {/* Corner mounting metal studs */}
+      {[-w/2 - border/2, w/2 + border/2].map((x, xi) => 
+        [-h/2 - border/2, h/2 + border/2].map((y, yi) => (
+          <mesh key={`${xi}-${yi}`} position={[x, y, 0.008]} rotation={[Math.PI / 2, 0, 0]} material={steelMat}>
+            <cylinderGeometry args={[0.004, 0.004, 0.016, 8]} />
+          </mesh>
+        ))
+      )}
+    </group>
   );
 }
 
@@ -420,8 +679,12 @@ const PROJECTS = [
 ];
 
 // ─── LAPTOP IDLE SCREEN TERMINAL ANIMATION ────────────────
-function LaptopIdleScreen() {
-  const { livery, setIsLaptopActive } = usePortfolio();
+interface LaptopIdleScreenProps {
+  livery: LiveryType;
+  setIsLaptopActive: (val: boolean) => void;
+}
+
+function LaptopIdleScreen({ livery, setIsLaptopActive }: LaptopIdleScreenProps) {
   const themeColor = LIVERIES[livery]?.color || "#ff6900";
   const [lines, setLines] = useState<string[]>([]);
   const [currentLine, setCurrentLine] = useState("");
@@ -530,25 +793,81 @@ function Laptop({ position, rotation }: LaptopProps) {
   const b = parseInt(themeColor.slice(5, 7), 16);
   const themeBg = `rgba(${r}, ${g}, ${b}, 0.08)`;
 
+  const blackPlasticMat = useMemo(() => {
+    return new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color("#151515"),
+      roughness: 0.6,
+      metalness: 0.1,
+    });
+  }, []);
+
+  const chromeMat = useMemo(() => {
+    return new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color("#e0e0e0"),
+      roughness: 0.05,
+      metalness: 0.95,
+      clearcoat: 1.0,
+    });
+  }, []);
+
+  const blackLeatherMat = useMemo(() => createWornLeather({ color: new THREE.Color("#050505") }), []);
+
   return (
     <group position={position} rotation={rotation}>
-      {/* Lower chassis */}
-      <mesh castShadow receiveShadow position={[0, 0.005, 0]} material={aluBrushedMat}>
-        <boxGeometry args={[0.34, 0.01, 0.24]} />
+      {/* Lower chassis (Sleek Apple MacBook design) */}
+      <mesh castShadow receiveShadow position={[0, 0.004, 0]} material={aluBrushedMat}>
+        <boxGeometry args={[0.34, 0.008, 0.24]} />
+      </mesh>
+
+      {/* MacBook keyboard well recess */}
+      <mesh position={[0, 0.0082, 0.03]} material={blackPlasticMat}>
+        <boxGeometry args={[0.31, 0.001, 0.12]} />
+      </mesh>
+
+      {/* MacBook keyboard rows (procedural key layout) */}
+      {[-0.04, -0.02, 0, 0.02, 0.04].map((zOffset, rowIdx) => (
+        <mesh key={rowIdx} position={[0, 0.009, 0.03 + zOffset]} material={blackLeatherMat}>
+          <boxGeometry args={[0.294, 0.001, 0.013]} />
+        </mesh>
+      ))}
+
+      {/* MacBook Trackpad */}
+      <mesh position={[0, 0.0081, -0.065]} material={aluBrushedMat}>
+        <boxGeometry args={[0.088, 0.001, 0.052]} />
+      </mesh>
+
+      {/* MacBook cylindrical display hinge */}
+      <mesh position={[0, 0.004, -0.118]} rotation={[0, 0, Math.PI / 2]} material={blackPlasticMat}>
+        <cylinderGeometry args={[0.006, 0.006, 0.31, 12]} />
       </mesh>
 
       {/* Screen panel assembly */}
-      <group position={[0, 0.01, -0.118]} rotation={[-Math.PI / 6, 0, 0]}>
-        {/* Screen outer casing */}
-        <mesh castShadow position={[0, 0.12, -0.004]} material={aluBrushedMat}>
-          <boxGeometry args={[0.34, 0.24, 0.008]} />
+      <group position={[0, 0.004, -0.118]} rotation={[-Math.PI / 6, 0, 0]}>
+        {/* Screen back outer casing (aluminium) */}
+        <mesh castShadow position={[0, 0.115, -0.003]} material={aluBrushedMat}>
+          <boxGeometry args={[0.34, 0.23, 0.006]} />
+        </mesh>
+
+        {/* Chrome Apple logo on back of screen */}
+        <mesh position={[0, 0.115, -0.0062]} rotation={[Math.PI / 2, 0, 0]} material={chromeMat}>
+          <cylinderGeometry args={[0.015, 0.015, 0.001, 16]} />
+        </mesh>
+        
+        {/* Screen inner black bezel display border */}
+        <mesh position={[0, 0.115, 0.001]} material={blackPlasticMat}>
+          <boxGeometry args={[0.34, 0.23, 0.002]} />
+        </mesh>
+
+        {/* MacBook screen notch */}
+        <mesh position={[0, 0.224, 0.0022]} material={blackPlasticMat}>
+          <boxGeometry args={[0.052, 0.01, 0.001]} />
         </mesh>
         
         <Html
           transform
-          position={[0, 0.12, 0.005]}
+          position={[0, 0.115, 0.0024]}
           rotation={[0, 0, 0]}
-          scale={0.00065} // Scales 492px width to exactly fit the 0.32m physical screen plane
+          scale={0.00065} // Scales 492px width to exactly fit the screen
           style={{
             width: "492px",
             height: "338px",
@@ -676,7 +995,7 @@ function Laptop({ position, rotation }: LaptopProps) {
               </div>
             </div>
           ) : (
-            <LaptopIdleScreen />
+            <LaptopIdleScreen livery={livery} setIsLaptopActive={setIsLaptopActive} />
           )}
         </Html>
       </group>
@@ -686,12 +1005,17 @@ function Laptop({ position, rotation }: LaptopProps) {
 
 // ─── NOTEBOOK ────────────────────────────────────────────
 function Notebook({ position, rotation }: { position: [number, number, number]; rotation: [number, number, number] }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const coverMat = useMemo(() => createWornLeather(), []);
-  const pageTex = useNotebookTexture();
+  const pageTex = useNotebookTexture(mounted);
   const pageMat = useMemo(() => {
     return new THREE.MeshPhysicalMaterial({
       color: new THREE.Color("#ffffff"),
-      map: pageTex,
+      map: pageTex || undefined,
       roughness: 0.95,
       metalness: 0.0,
     });
@@ -860,7 +1184,13 @@ function LeatherGloves({ position, rotation }: { position: [number, number, numb
 export default function Workbench() {
   const { setFocusedPoster, livery } = usePortfolio();
   const themeColor = LIVERIES[livery]?.color || "#ff6900";
-  const walnutTex = useWalnutTexture();
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const walnutTex = useWalnutTexture(mounted);
   const walnutDeskMat = useMemo(() => {
     return new THREE.MeshPhysicalMaterial({
       color: new THREE.Color("#ffffff"),
@@ -872,8 +1202,17 @@ export default function Workbench() {
     });
   }, [walnutTex]);
   const steelMat = useMemo(() => createSteel(), []);
-  const blueprintResumeTex = useBlueprintTexture(true);
-  const blueprintJourneyTex = useBlueprintTexture(false);
+  const aluminumMat = useMemo(() => createMachinedAluminum(), []);
+  const frameMat = useMemo(() => {
+    return new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color("#121214"),
+      roughness: 0.65,
+      metalness: 0.2,
+    });
+  }, []);
+  const blackLeatherMat = useMemo(() => createWornLeather({ color: new THREE.Color("#111113") }), []);
+  const blueprintResumeTex = useBlueprintTexture(true, mounted);
+  const blueprintJourneyTex = useBlueprintTexture(false, mounted);
 
   const blueprintResumeMat = useMemo(() => {
     return new THREE.MeshBasicMaterial({
@@ -992,12 +1331,12 @@ export default function Workbench() {
         </mesh>
 
         {/* Blueprint: Career Journey */}
-        <mesh
-          castShadow
-          receiveShadow
-          position={[-0.55, 0.25, 0.001]}
+        <FramedPoster
+          position={[-0.55, 0.25, 0.008]}
           rotation={[0, 0, -0.02]}
+          args={[0.55, 0.77]}
           material={blueprintJourneyMat}
+          paperColor="#0a0e14"
           onClick={(e) => {
             e.stopPropagation();
             setFocusedPoster("journey");
@@ -1010,17 +1349,17 @@ export default function Workbench() {
             e.stopPropagation();
             document.body.style.cursor = "auto";
           }}
-        >
-          <planeGeometry args={[0.55, 0.77]} />
-        </mesh>
+          steelMat={steelMat}
+          frameMat={frameMat}
+        />
 
         {/* Blueprint: Resume */}
-        <mesh
-          castShadow
-          receiveShadow
-          position={[0.55, 0.25, 0.001]}
+        <FramedPoster
+          position={[0.55, 0.25, 0.008]}
           rotation={[0, 0, 0.015]}
+          args={[0.55, 0.77]}
           material={blueprintResumeMat}
+          paperColor="#0a0e14"
           onClick={(e) => {
             e.stopPropagation();
             setFocusedPoster("resume");
@@ -1033,16 +1372,15 @@ export default function Workbench() {
             e.stopPropagation();
             document.body.style.cursor = "auto";
           }}
-        >
-          <planeGeometry args={[0.55, 0.77]} />
-        </mesh>
+          steelMat={steelMat}
+          frameMat={frameMat}
+        />
 
         {/* Poster: Ferrari */}
-        <mesh
-          castShadow
-          receiveShadow
-          position={[-1.1, 0.25, 0.001]}
+        <FramedPoster
+          position={[-1.1, 0.25, 0.008]}
           rotation={[0, 0, 0.015]}
+          args={[0.4, 0.56]}
           material={ferrariMat}
           onClick={(e) => {
             e.stopPropagation();
@@ -1056,16 +1394,15 @@ export default function Workbench() {
             e.stopPropagation();
             document.body.style.cursor = "auto";
           }}
-        >
-          <planeGeometry args={[0.4, 0.56]} />
-        </mesh>
+          steelMat={steelMat}
+          frameMat={frameMat}
+        />
 
         {/* Poster: KTM */}
-        <mesh
-          castShadow
-          receiveShadow
-          position={[-1.65, 0.22, 0.001]}
+        <FramedPoster
+          position={[-1.65, 0.22, 0.008]}
           rotation={[0, 0, -0.02]}
+          args={[0.4, 0.56]}
           material={ktmMat}
           onClick={(e) => {
             e.stopPropagation();
@@ -1079,16 +1416,15 @@ export default function Workbench() {
             e.stopPropagation();
             document.body.style.cursor = "auto";
           }}
-        >
-          <planeGeometry args={[0.4, 0.56]} />
-        </mesh>
+          steelMat={steelMat}
+          frameMat={frameMat}
+        />
 
         {/* Poster: Ayrton Senna */}
-        <mesh
-          castShadow
-          receiveShadow
-          position={[1.1, 0.25, 0.001]}
+        <FramedPoster
+          position={[1.1, 0.25, 0.008]}
           rotation={[0, 0, -0.01]}
+          args={[0.4, 0.56]}
           material={sennaMat}
           onClick={(e) => {
             e.stopPropagation();
@@ -1102,16 +1438,15 @@ export default function Workbench() {
             e.stopPropagation();
             document.body.style.cursor = "auto";
           }}
-        >
-          <planeGeometry args={[0.4, 0.56]} />
-        </mesh>
+          steelMat={steelMat}
+          frameMat={frameMat}
+        />
 
         {/* Poster: Ayrton Senna 2 (Lotus) */}
-        <mesh
-          castShadow
-          receiveShadow
-          position={[1.65, 0.22, 0.001]}
+        <FramedPoster
+          position={[1.65, 0.22, 0.008]}
           rotation={[0, 0, 0.02]}
+          args={[0.4, 0.56]}
           material={senna2Mat}
           onClick={(e) => {
             e.stopPropagation();
@@ -1125,9 +1460,9 @@ export default function Workbench() {
             e.stopPropagation();
             document.body.style.cursor = "auto";
           }}
-        >
-          <planeGeometry args={[0.4, 0.56]} />
-        </mesh>
+          steelMat={steelMat}
+          frameMat={frameMat}
+        />
       </group>
 
       {/* 2. THE WORKBENCH TABLE STRUCTURE */}
@@ -1160,12 +1495,43 @@ export default function Workbench() {
       {/* Leather Gloves */}
       <LeatherGloves position={[0.45, 0.75, -0.58]} rotation={[0, -0.2, 0]} />
 
-      {/* Brake Rotor (resting flat on the right side of the desk) */}
-      <BrakeRotor
-        position={[0.55, 0.755, -0.45]}
-        rotation={[Math.PI / 2, 0, -0.1]}
-        material={steelMat}
+      {/* Glowing Brake Rotor Desk Lamp (placed on back-left side of desk) */}
+      <BrakeRotorLamp
+        position={[-0.72, 0.84, -0.72]}
+        rotation={[0, 0.8, 0]}
+        steelMat={steelMat}
+        aluminumMat={aluminumMat}
       />
+
+      {/* Shoei Helmet (placed on right side of desk) */}
+      <ShoeiHelmet
+        position={[0.52, 0.84, -0.42]}
+        rotation={[0, -0.6, 0]}
+        scale={1.385}
+      />
+
+      {/* Drafting Vernier Caliper Tool */}
+      <group position={[0.2, 0.752, -0.44]} rotation={[0, 0.6, 0]}>
+        <mesh castShadow material={aluminumMat}>
+          <boxGeometry args={[0.16, 0.002, 0.01]} />
+        </mesh>
+        <mesh position={[-0.07, 0, 0.012]} material={aluminumMat}>
+          <boxGeometry args={[0.006, 0.002, 0.024]} />
+        </mesh>
+        <mesh position={[-0.05, 0.001, 0]} material={steelMat}>
+          <boxGeometry args={[0.014, 0.003, 0.012]} />
+        </mesh>
+      </group>
+
+      {/* Motorcycle Key Fob */}
+      <group position={[-0.32, 0.751, -0.38]} rotation={[0, 0.2, 0]}>
+        <mesh castShadow material={blackLeatherMat}>
+          <boxGeometry args={[0.016, 0.005, 0.038]} />
+        </mesh>
+        <mesh position={[0, 0, 0.02]} rotation={[Math.PI / 2, 0, 0]} material={steelMat}>
+          <torusGeometry args={[0.006, 0.0012, 6, 10]} />
+        </mesh>
+      </group>
     </group>
   );
 }

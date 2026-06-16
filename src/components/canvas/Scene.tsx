@@ -24,6 +24,7 @@ export default function Scene() {
   return (
     <Canvas
       style={{ width: "100%", height: "100%" }}
+      dpr={[1, 1.5]}
       camera={{
         fov: 50,
         near: 0.1,

@@ -89,9 +89,30 @@ canvas:focus {
   overflow: hidden;
 }
 
+/* Vignette to enhance overlay text readability against bright spots in 3D canvas */
+.overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 30%, rgba(5, 5, 5, 0.55) 100%);
+  pointer-events: none;
+  z-index: -1;
+}
+
 .overlay a,
 .overlay button {
   pointer-events: auto;
+}
+
+/* Glassmorphism panel styling for HUD reading boxes */
+.hud-card {
+  background: rgba(8, 8, 10, 0.82) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  padding: 18px 22px;
 }
 
 /* ─── SECTION CONTENT ──────────────────────────────── */

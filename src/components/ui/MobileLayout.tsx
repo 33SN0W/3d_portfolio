@@ -142,11 +142,11 @@ const SECTIONS = [
 
 export default function MobileLayout() {
   const [activeSection, setActiveSection] = useState("paddock");
-  const [lapTime, setLapTime] = useState("00:00.000");
+  const lapTimeRef = useRef<HTMLDivElement>(null);
   const [focusedPoster, setFocusedPoster] = useState<PosterKey | null>(null);
   const [animateProgress, setAnimateProgress] = useState(0);
 
-  // 1. Lap Timer Stopwatch (counting up in real-time since load)
+  // 1. Lap Timer Stopwatch (counting up in real-time since load, direct DOM ref)
   useEffect(() => {
     const startTime = performance.now();
     let animId: number;
@@ -157,9 +157,9 @@ export default function MobileLayout() {
       const secs = Math.floor((totalMs % 60000) / 1000);
       const ms = totalMs % 1000;
       
-      setLapTime(
-        `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}.${String(ms).padStart(3, "0")}`
-      );
+      if (lapTimeRef.current) {
+        lapTimeRef.current.innerText = `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}.${String(ms).padStart(3, "0")}`;
+      }
       animId = requestAnimationFrame(updateTimer);
     };
     animId = requestAnimationFrame(updateTimer);
@@ -280,7 +280,7 @@ export default function MobileLayout() {
         </div>
         <div style={{ textAlign: "right" }}>
           <div style={{ fontSize: "8px", color: "var(--steel)", letterSpacing: "0.1em" }}>LAP TIME</div>
-          <div style={{ fontSize: "12px", color: "var(--orange)", fontWeight: "bold" }}>{lapTime}</div>
+          <div ref={lapTimeRef} style={{ fontSize: "12px", color: "var(--orange)", fontWeight: "bold" }}>00:00.000</div>
         </div>
       </header>
 

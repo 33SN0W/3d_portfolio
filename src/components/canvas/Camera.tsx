@@ -21,8 +21,8 @@ import { usePortfolio } from "@/providers/PortfolioProvider";
 const KEYFRAMES = [
   { at: 0.00, pos: [0, 1.4, 4.0],   look: [0, 0.4, 0] },       // Sector 1: Paddock established
   { at: 0.10, pos: [0, 1.4, 4.0],   look: [0, 0.4, 0] },       // Linger paddock
-  { at: 0.20, pos: [1.1, 0.95, 1.3], look: [1.1, 0.5, 0.2] },   // Sector 2: Garage focus (KTM)
-  { at: 0.30, pos: [1.1, 0.95, 1.3], look: [1.1, 0.5, 0.2] },   // Linger Garage
+  { at: 0.20, pos: [1.35, 0.95, 1.3], look: [1.35, 0.5, 0.2] },   // Sector 2: Garage focus (KTM)
+  { at: 0.30, pos: [1.35, 0.95, 1.3], look: [1.35, 0.5, 0.2] },   // Linger Garage
   { at: 0.40, pos: [0, 1.48, 0.85], look: [0, 1.55, -1.2] },   // Sector 3: Race History (Blueprints)
   { at: 0.50, pos: [0, 1.48, 0.85], look: [0, 1.55, -1.2] },   // Linger History
   { at: 0.60, pos: [0, 1.1, 0.9],   look: [0, 0.85, -0.75] },  // Sector 4: Trophy Wall (Laptop)
@@ -120,13 +120,13 @@ export default function Camera() {
     } else if (activeBikePart) {
       // Dynamic camera targets for bike CAD inspection zoom
       const BIKE_TARGETS: Record<string, { pos: [number, number, number]; look: [number, number, number] }> = {
-        engine:       { pos: [1.9, 0.55, 0.7],  look: [1.1, 0.42, 0.2] },
-        frame:        { pos: [1.9, 0.75, 0.8],  look: [1.1, 0.58, 0.2] },
-        suspension:   { pos: [1.7, 0.45, -0.3], look: [1.0, 0.25, -0.2] },
-        rear_section: { pos: [1.8, 0.5, -0.4],  look: [1.1, 0.3, -0.4] },
-        electrical:   { pos: [1.8, 0.7, 0.9],   look: [1.1, 0.55, 0.5] },
+        engine:       { pos: [2.15, 0.55, 0.7],  look: [1.35, 0.42, 0.2] },
+        frame:        { pos: [2.15, 0.75, 0.8],  look: [1.35, 0.58, 0.2] },
+        suspension:   { pos: [1.95, 0.45, -0.3], look: [1.25, 0.25, -0.2] },
+        rear_section: { pos: [2.05, 0.5, -0.4],  look: [1.35, 0.3, -0.4] },
+        electrical:   { pos: [2.05, 0.7, 0.9],   look: [1.35, 0.55, 0.5] },
       };
-      const bTarget = BIKE_TARGETS[activeBikePart] || { pos: [1.8, 0.7, 1.2], look: [1.1, 0.5, 0.2] };
+      const bTarget = BIKE_TARGETS[activeBikePart] || { pos: [2.05, 0.7, 1.2], look: [1.35, 0.5, 0.2] };
       basePosX = bTarget.pos[0];
       basePosY = bTarget.pos[1];
       basePosZ = bTarget.pos[2];
@@ -162,13 +162,13 @@ export default function Camera() {
       baseLookZ = pTarget.look[2];
     } else if (activeBikePart) {
       const BIKE_TARGETS: Record<string, { pos: [number, number, number]; look: [number, number, number] }> = {
-        engine:       { pos: [1.9, 0.55, 0.7],  look: [1.1, 0.42, 0.2] },
-        frame:        { pos: [1.9, 0.75, 0.8],  look: [1.1, 0.58, 0.2] },
-        suspension:   { pos: [1.7, 0.45, -0.3], look: [1.0, 0.25, -0.2] },
-        rear_section: { pos: [1.8, 0.5, -0.4],  look: [1.1, 0.3, -0.4] },
-        electrical:   { pos: [1.8, 0.7, 0.9],   look: [1.1, 0.55, 0.5] },
+        engine:       { pos: [2.15, 0.55, 0.7],  look: [1.35, 0.42, 0.2] },
+        frame:        { pos: [2.15, 0.75, 0.8],  look: [1.35, 0.58, 0.2] },
+        suspension:   { pos: [1.95, 0.45, -0.3], look: [1.25, 0.25, -0.2] },
+        rear_section: { pos: [2.05, 0.5, -0.4],  look: [1.35, 0.3, -0.4] },
+        electrical:   { pos: [2.05, 0.7, 0.9],   look: [1.35, 0.55, 0.5] },
       };
-      const bTarget = BIKE_TARGETS[activeBikePart] || { pos: [1.8, 0.7, 1.2], look: [1.1, 0.5, 0.2] };
+      const bTarget = BIKE_TARGETS[activeBikePart] || { pos: [2.05, 0.7, 1.2], look: [1.35, 0.5, 0.2] };
       baseLookX = bTarget.look[0];
       baseLookY = bTarget.look[1];
       baseLookZ = bTarget.look[2];

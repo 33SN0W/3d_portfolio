@@ -49,8 +49,8 @@ export default function Lighting() {
         penumbra={0.7}
         decay={2}
         castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        shadow-mapSize-width={512}
+        shadow-mapSize-height={512}
         shadow-bias={-0.0003}
         shadow-normalBias={0.03}
       />

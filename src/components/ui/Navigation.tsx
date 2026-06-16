@@ -10,8 +10,8 @@ const SECTION_KEYS = Object.keys(SECTIONS) as SectionKey[];
 export default function Navigation() {
   const { activeSection, livery } = usePortfolio();
   const [activeSecIdx, setActiveSecIdx] = useState(0);
-  const [lapTime, setLapTime] = useState("00:00.000");
   const [lapCount, setLapCount] = useState(1);
+  const lapTimeRef = useRef<HTMLSpanElement>(null);
   const [deltaInfo, setDeltaInfo] = useState<{ text: string; isGreen: boolean } | null>(null);
 
   const lastSectionRef = useRef(activeSection);
@@ -60,9 +60,9 @@ export default function Navigation() {
       const secs = Math.floor((currentLapTimeMs % 60000) / 1000);
       const ms = Math.floor(currentLapTimeMs % 1000);
 
-      setLapTime(
-        `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}.${String(ms).padStart(3, "0")}`
-      );
+      if (lapTimeRef.current) {
+        lapTimeRef.current.innerText = `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}.${String(ms).padStart(3, "0")}`;
+      }
       animId = requestAnimationFrame(updateTimer);
     };
 
@@ -175,8 +175,8 @@ export default function Navigation() {
           )}
           <div style={{ display: "flex", flexDirection: "column" }}>
             <span style={{ fontSize: "8px", color: "var(--steel)", letterSpacing: "0.1em" }}>LAP {lapCount} // ACTIVE</span>
-            <span style={{ fontSize: "13px", color: "var(--orange)", fontWeight: "bold", textShadow: "0 0 6px var(--orange-glow)" }}>
-              {lapTime}
+            <span ref={lapTimeRef} style={{ fontSize: "13px", color: "var(--orange)", fontWeight: "bold", textShadow: "0 0 6px var(--orange-glow)" }}>
+              00:00.000
             </span>
           </div>
         </div>
