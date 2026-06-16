@@ -13,9 +13,8 @@ import { useThree } from "@react-three/fiber";
 
 export default function Lighting() {
   const keySpotRef = useRef<THREE.SpotLight>(null);
-  const wallRef = useRef<THREE.SpotLight>(null);
   const bikeRef = useRef<THREE.SpotLight>(null);
-  const laptopRef = useRef<THREE.PointLight>(null);
+  const bikeFillRef = useRef<THREE.SpotLight>(null);
   const { scene } = useThree();
 
   useEffect(() => {
@@ -28,6 +27,7 @@ export default function Lighting() {
     bikeTarget.position.set(1.35, 0.5, 0.2); // Center of KTM Duke bike
     scene.add(bikeTarget);
     if (bikeRef.current) bikeRef.current.target = bikeTarget;
+    if (bikeFillRef.current) bikeFillRef.current.target = bikeTarget;
 
     return () => {
       scene.remove(keyTarget);
@@ -76,10 +76,22 @@ export default function Lighting() {
         ref={bikeRef}
         position={[2.2, 0.8, -1.2]}
         color="#ff3a00"
-        intensity={160}
+        intensity={120}
         distance={5}
         angle={Math.PI / 4}
         penumbra={0.5}
+        decay={1.8}
+      />
+
+      {/* Motorcycle front-left fill/key light — making the details facing the camera visible */}
+      <spotLight
+        ref={bikeFillRef}
+        position={[0.6, 2.2, 2.2]}
+        color="#ffe8df"
+        intensity={60}
+        distance={7}
+        angle={Math.PI / 5}
+        penumbra={0.8}
         decay={1.8}
       />
 

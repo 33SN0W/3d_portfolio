@@ -3,13 +3,13 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { getSection, subscribe, scrollToSection, SECTIONS, type SectionKey } from "@/systems/scroll";
 import { usePortfolio } from "@/providers/PortfolioProvider";
-import { LIVERIES } from "@/config/colors";
+import LiverySwitcher from "@/components/ui/LiverySwitcher";
 
 const SECTION_KEYS = Object.keys(SECTIONS) as SectionKey[];
 
 export default function Navigation() {
-  const { activeSection, livery, isMuted, setIsMuted, playAudio } = usePortfolio();
-  const [activeSecIdx, setActiveSecIdx] = useState(0);
+  const { activeSection, isMuted, setIsMuted } = usePortfolio();
+  const [activeSecIdx, setActiveSecIdx] = useState(() => getSection());
   const [lapCount, setLapCount] = useState(1);
   const lapTimeRef = useRef<HTMLSpanElement>(null);
   const [deltaInfo, setDeltaInfo] = useState<{ text: string; isGreen: boolean } | null>(null);
@@ -21,7 +21,6 @@ export default function Navigation() {
   }, []);
 
   useEffect(() => {
-    update();
     return subscribe(update);
   }, [update]);
 
@@ -30,7 +29,7 @@ export default function Navigation() {
     if (activeSection !== lastSectionRef.current) {
       const randomDelta = -0.350 + Math.random() * 0.600; // between -0.350s (green) and +0.250s (red)
       const isGreen = randomDelta < 0;
-      const formattedDelta = (isGreen ? "▲ " : "▼ +") + randomDelta.toFixed(3) + "s";
+      const formattedDelta = (isGreen ? "▲ SIM " : "▼ SIM +") + randomDelta.toFixed(3) + "s";
 
       setDeltaInfo({ text: formattedDelta, isGreen });
 
@@ -90,27 +89,8 @@ export default function Navigation() {
       }}
       aria-label="Primary timing navigation"
     >
-      {/* Left Branding / Dynamic Livery Indicator */}
-      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        <span
-          style={{
-            width: "8px",
-            height: "8px",
-            borderRadius: "50%",
-            background: "var(--orange)",
-            boxShadow: "0 0 8px var(--orange-glow)",
-            transition: "all 0.3s ease",
-          }}
-        />
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <span style={{ fontSize: "11px", fontWeight: "bold", letterSpacing: "0.08em", color: "#ffffff" }}>
-            PRATEEK <span style={{ color: "var(--steel)" }}>// LIVERY TUNED</span>
-          </span>
-          <span style={{ fontSize: "7px", color: "var(--orange)", letterSpacing: "0.1em", fontWeight: "bold" }}>
-            {LIVERIES[livery]?.label}
-          </span>
-        </div>
-      </div>
+      {/* Left Branding / Livery Switcher */}
+      <LiverySwitcher />
 
       {/* Center Sectors Navbar - Bigger Sector Bar */}
       <div style={{ display: "flex", gap: "2px", height: "100%" }}>
@@ -122,7 +102,10 @@ export default function Navigation() {
           return (
             <button
               key={key}
+              type="button"
               onClick={() => scrollToSection(key)}
+              aria-label={`Navigate to ${section.label} section`}
+              aria-current={isActive ? "true" : undefined}
               style={{
                 background: "transparent",
                 border: "none",
@@ -147,7 +130,7 @@ export default function Navigation() {
                 if (!isActive) e.currentTarget.style.color = "var(--titanium)";
               }}
             >
-              <span style={{ fontSize: "7px", color: "var(--steel)", letterSpacing: "0.05em" }}>{sectorCode}</span>
+              <span style={{ fontSize: "9px", color: "var(--steel)", letterSpacing: "0.05em" }}>{sectorCode}</span>
               <span style={{ fontSize: "10px", letterSpacing: "0.05em" }}>{section.label.toUpperCase()}</span>
             </button>
           );
@@ -159,13 +142,12 @@ export default function Navigation() {
         
         {/* Audio Speaker Mute Toggle */}
         <button
+          type="button"
           onClick={() => {
             setIsMuted(!isMuted);
-            // Play physical chirp feedback immediately if unmuting
             if (isMuted) {
               try {
-                // Procedural audio plays directly
-                const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+                const ctx = new (window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext)();
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.type = "sine";
@@ -176,9 +158,11 @@ export default function Navigation() {
                 gain.connect(ctx.destination);
                 osc.start();
                 osc.stop(ctx.currentTime + 0.08);
-              } catch(e){}
+              } catch {}
             }
           }}
+          aria-label={isMuted ? "Unmute audio" : "Mute audio"}
+          aria-pressed={isMuted}
           style={{
             background: "transparent",
             border: "1px solid rgba(255, 255, 255, 0.15)",
@@ -203,7 +187,7 @@ export default function Navigation() {
             e.currentTarget.style.color = isMuted ? "var(--steel)" : "var(--orange)";
           }}
         >
-          <span>{isMuted ? "COMMS OFF ✖" : "COMMS ON 📻"}</span>
+          <span>{isMuted ? "COMMS OFF" : "COMMS ON"}</span>
         </button>
 
         {/* Stopwatch Realtime Display */}
@@ -223,7 +207,7 @@ export default function Navigation() {
             </span>
           )}
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <span style={{ fontSize: "8px", color: "var(--steel)", letterSpacing: "0.1em" }}>LAP {lapCount} // ACTIVE</span>
+            <span style={{ fontSize: "9px", color: "var(--steel)", letterSpacing: "0.1em" }}>LAP {lapCount} {"//"} ACTIVE</span>
             <span ref={lapTimeRef} style={{ fontSize: "13px", color: "var(--orange)", fontWeight: "bold", textShadow: "0 0 6px var(--orange-glow)" }}>
               00:00.000
             </span>

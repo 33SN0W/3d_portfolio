@@ -18,13 +18,9 @@
 import { useMemo } from "react";
 import * as THREE from "three";
 import { Html } from "@react-three/drei";
-import { usePortfolio } from "@/providers/PortfolioProvider";
-import { LIVERIES } from "@/config/colors";
 import {
   createCarbon,
-  createBrushedAluminum,
   createMachinedAluminum,
-  createAnodizedOrange,
   createSteel,
 } from "@/materials";
 

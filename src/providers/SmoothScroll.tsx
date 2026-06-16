@@ -21,6 +21,9 @@ export default function SmoothScrollProvider({ children }: SmoothScrollProps) {
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) return;
+
     const lenis = new Lenis({
       // Duration of the scroll deceleration — long enough to feel like mass
       duration: 1.8,

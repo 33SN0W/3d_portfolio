@@ -15,7 +15,7 @@
 import { useMemo, useState, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { useTexture, Html, Text } from "@react-three/drei";
+import { useTexture, Html } from "@react-three/drei";
 import { usePortfolio } from "@/providers/PortfolioProvider";
 import { LIVERIES, LiveryType } from "@/config/colors";
 import {
@@ -25,8 +25,12 @@ import {
   createAnodizedOrange,
   createSteel,
   createWornLeather,
-  createSmokedGlass,
 } from "@/materials";
+
+function seededRandom(seed: number): number {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
 
 function useWalnutTexture(mounted: boolean) {
   return useMemo(() => {
@@ -58,12 +62,12 @@ function useWalnutTexture(mounted: boolean) {
     ctx.strokeStyle = "rgba(43, 27, 13, 0.25)";
     ctx.lineWidth = 0.5;
     for (let i = 0; i < 60; i++) {
-      const rx = Math.random() * 512;
-      const ry = Math.random() * 512;
-      const rw = 20 + Math.random() * 80;
+      const rx = seededRandom(i * 4 + 1) * 512;
+      const ry = seededRandom(i * 4 + 2) * 512;
+      const rw = 20 + seededRandom(i * 4 + 3) * 80;
       ctx.beginPath();
       ctx.moveTo(rx, ry);
-      ctx.lineTo(rx + rw, ry + (Math.random() * 2 - 1));
+      ctx.lineTo(rx + rw, ry + (seededRandom(i * 4 + 4) * 2 - 1));
       ctx.stroke();
     }
 
@@ -594,9 +598,9 @@ function FramedPoster({
   rotation: [number, number, number];
   args: [number, number];
   material: THREE.Material;
-  onClick: (e: any) => void;
-  onPointerOver: (e: any) => void;
-  onPointerOut: (e: any) => void;
+  onClick: (e: { stopPropagation: () => void }) => void;
+  onPointerOver: (e: { stopPropagation: () => void }) => void;
+  onPointerOut: (e: { stopPropagation: () => void }) => void;
   steelMat: THREE.Material;
   frameMat: THREE.Material;
   paperColor?: string;
@@ -827,12 +831,6 @@ function Laptop({ position, rotation }: LaptopProps) {
   const { isLaptopActive, setIsLaptopActive, activeProjectIndex, setActiveProjectIndex, livery } = usePortfolio();
   const themeColor = LIVERIES[livery]?.color || "#ff6900";
 
-  // Parse livery color to RGB for transparency backgrounds
-  const r = parseInt(themeColor.slice(1, 3), 16);
-  const g = parseInt(themeColor.slice(3, 5), 16);
-  const b = parseInt(themeColor.slice(5, 7), 16);
-  const themeBg = `rgba(${r}, ${g}, ${b}, 0.08)`;
-
   const blackPlasticMat = useMemo(() => {
     return new THREE.MeshPhysicalMaterial({
       color: new THREE.Color("#151515"),
@@ -1048,7 +1046,8 @@ function Notebook({ position, rotation }: { position: [number, number, number]; 
   const { setFocusedPoster } = usePortfolio();
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    setMounted(true);
+    const id = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(id);
   }, []);
 
   const coverMat = useMemo(() => createWornLeather(), []);
@@ -1095,18 +1094,26 @@ function Notebook({ position, rotation }: { position: [number, number, number]; 
   );
 }
 
+
 // ─── STEAM PARTICLES ─────────────────────────────────────
 function SteamParticles() {
   const count = 5;
   const particles = useMemo(() => {
-    return Array.from({ length: count }).map((_, i) => ({
-      ref: { current: null as THREE.Mesh | null },
-      speedY: 0.015 + Math.random() * 0.015,
-      startY: 0.082 + Math.random() * 0.04,
-      startX: -0.01 + Math.random() * 0.02,
-      startZ: -0.01 + Math.random() * 0.02,
-      phase: Math.random() * Math.PI * 2,
-    }));
+    return Array.from({ length: count }).map((_, idx) => {
+      const r1 = seededRandom(idx * 10 + 1);
+      const r2 = seededRandom(idx * 10 + 2);
+      const r3 = seededRandom(idx * 10 + 3);
+      const r4 = seededRandom(idx * 10 + 4);
+      const r5 = seededRandom(idx * 10 + 5);
+      return {
+        ref: { current: null } as React.RefObject<THREE.Mesh | null>,
+        speedY: 0.015 + r1 * 0.015,
+        startY: 0.082 + r2 * 0.04,
+        startX: -0.01 + r3 * 0.02,
+        startZ: -0.01 + r4 * 0.02,
+        phase: r5 * Math.PI * 2,
+      };
+    });
   }, []);
 
   useFrame((state) => {
@@ -1133,10 +1140,10 @@ function SteamParticles() {
 
   return (
     <group>
-      {particles.map((p, i) => (
+      {particles.map((p, idx) => (
         <mesh
-          key={i}
-          ref={p.ref as any}
+          key={idx}
+          ref={p.ref}
           position={[p.startX, p.startY, p.startZ]}
         >
           <sphereGeometry args={[0.006, 6, 6]} />
@@ -1258,7 +1265,8 @@ export default function Workbench() {
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    setMounted(true);
+    const id = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(id);
   }, []);
 
   const walnutTex = useWalnutTexture(mounted);

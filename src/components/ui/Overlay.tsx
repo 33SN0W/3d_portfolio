@@ -11,14 +11,25 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import * as THREE from "three";
-import { getProgress, subscribe, type SectionKey, SECTIONS, scrollToSection } from "@/systems/scroll";
+import { getProgress, subscribe, type SectionKey, SECTIONS } from "@/systems/scroll";
 import { usePortfolio } from "@/providers/PortfolioProvider";
 import { LIVERIES } from "@/config/colors";
+import { CONTACT, VALUE_PROPOSITION } from "@/config/site";
+import { PROJECTS_DATA, POSTER_DATA, SKILLS_DATA, type PosterKey } from "@/content/portfolio";
+import CopyEmailButton from "@/components/ui/CopyEmailButton";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 /** Computes section-local progress (0-1) for a given section */
 function useSectionVisibility(sectionKey: SectionKey): boolean {
-  const [visible, setVisible] = useState(false);
   const { activeBikePart } = usePortfolio();
+  const [visible, setVisible] = useState(() => {
+    const p = getProgress();
+    const section = SECTIONS[sectionKey];
+    if (!section) return false;
+    const fadeIn = section.start;
+    const fadeOut = section.end;
+    return p >= fadeIn - 0.02 && p <= fadeOut + 0.02;
+  });
 
   const update = useCallback(() => {
     const p = getProgress();
@@ -34,58 +45,13 @@ function useSectionVisibility(sectionKey: SectionKey): boolean {
   }, [sectionKey]);
 
   useEffect(() => {
-    update();
     return subscribe(update);
   }, [update]);
 
   return activeBikePart ? false : visible;
 }
 
-// PROJECTS CONFIG
-const PROJECTS_DATA = [
-  {
-    id: "senna2", // Maps to active suspension poster
-    name: "YouTube Ad Recommender",
-    tech: "Python // TF-IDF // Scikit-Learn",
-    desc: "SVM video category classifier trained on 3,500+ videos and 6,600+ ad records to optimize recommendations.",
-    problem: "Low matching precision due to sparse video metadata and high label noise.",
-    constraints: "Required classification accuracy above 95% using high-density unigram/bigram textual features.",
-    tradeoffs: "Selected SVM over deep transformer models to reduce computation cost and latency on CPU nodes.",
-    architecture: "Lemmatization and NLP pre-processing pipelines feeding trained SVM and Naive Bayes classifiers.",
-    scale: "Categorized 3,500+ videos and 6,600+ custom-scraped advertisement segments.",
-    impact: "Achieved 97% Naive Bayes and 98% SVM accuracy on validation sets.",
-    github: "https://github.com/33SN0W/ad_reccomd",
-    deck: ""
-  },
-  {
-    id: "ferrari", // Maps to SF-24 engine poster
-    name: "Hybrid Memory Cache Design",
-    tech: "C++ // ChampSim // Memory Systems",
-    desc: "Frequency-aware and channel-aware cache eviction strategies over baseline LRU for DRAM/NVM architectures.",
-    problem: "Excessive writebacks and latency bottlenecks on non-volatile memory (NVM) due to standard cache policy limits.",
-    constraints: "Must execute within strict hardware cycle counts using the ChampSim simulator.",
-    tradeoffs: "Designed slightly complex eviction computations to prioritize NVM longevity and reduce write fatigue.",
-    architecture: "Custom eviction algorithms (P1 and P2) integrating access recency, frequency, and channel priority.",
-    scale: "Evaluated across benchmark traces on a simulated 4-channel hybrid memory system.",
-    impact: "Reduced NVM writebacks while maintaining instructions-per-cycle, boosting LLC hit rate by up to 5%.",
-    github: "https://github.com/33SN0W/champsim",
-    deck: "https://raw.githubusercontent.com/33SN0W/champsim/main/endsem_presentation_prateek.pdf"
-  },
-  {
-    id: "ktm", // Maps to MotoGP V4 engine poster
-    name: "Academic Domain Predictor",
-    tech: "TensorFlow // sentence-transformers // NLP",
-    desc: "Research discovery platform with semantic paper recommendation and multi-label academic classification.",
-    problem: "High manual overhead and friction in academic literature discovery and categorization.",
-    constraints: "Requires highly accurate multi-label classification of overlapping scientific domains.",
-    tradeoffs: "Used sentence-transformers (all-MiniLM-L6-v2) for embeddings to balance search speed and semantic accuracy.",
-    architecture: "TensorFlow deep neural networks combined with cosine similarity search engines.",
-    scale: "Processes high-dimensional paper embeddings for real-time semantic query matching.",
-    impact: "Achieved 99.4% categorical classification accuracy and instant recommendation retrieval.",
-    github: "https://github.com/33SN0W/nlp_project",
-    deck: "https://raw.githubusercontent.com/33SN0W/nlp_project/main/Research%20Literature%20Recommendation%20System%20and%20Academic%20Domain%20Predictor.pdf"
-  }
-];
+// PROJECTS CONFIG imported from @/content/portfolio
 
 // ─── PADDOCK (DRIVER PROFILE) SECTION ──────────────────
 function PaddockSection() {
@@ -113,7 +79,18 @@ function PaddockSection() {
       <div className="panel-header">
         <div className="panel-title">SPECIFICATION SHEET // SECTOR 1</div>
         <h1 className="panel-main-heading">PRATEEK</h1>
-        <div className="panel-subtitle">SOFTWARE ENGINEER // SYSTEMS & DATA ARCHITECT</div>
+        <p
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "11px",
+            color: "var(--orange)",
+            marginTop: "8px",
+            letterSpacing: "0.04em",
+            lineHeight: 1.4,
+          }}
+        >
+          {VALUE_PROPOSITION}
+        </p>
       </div>
       
       <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontFamily: "var(--font-mono)", fontSize: "10px", lineHeight: "1.4" }}>
@@ -135,8 +112,8 @@ function PaddockSection() {
         </div>
       </div>
 
-      <p className="type-mono" style={{ color: "var(--orange)", fontSize: "8px", marginTop: "20px", opacity: 0.8, letterSpacing: "0.1em" }}>
-        [SCROLL DOWN TO PROGRESS SCAN]
+      <p className="type-mono" style={{ color: "var(--orange)", fontSize: "10px", marginTop: "20px", opacity: 0.8, letterSpacing: "0.1em" }}>
+        [CLICK POSTERS · OPEN LAPTOP · INSPECT BIKE]
       </p>
     </div>
   );
@@ -146,12 +123,7 @@ function PaddockSection() {
 function GarageSection() {
   const visible = useSectionVisibility("GARAGE");
 
-  const skills = [
-    { cat: "PROPULSION (Data & Systems)", items: [{ name: "PySpark", color: "#ffd500" }, { name: "Python", color: "#ffd500" }, { name: "SQL", color: "#ffd500" }, { name: "C++", color: "#41ff72" }, { name: "KQL", color: "#41ff72" }, { name: "Data Warehousing", color: "#41ff72" }] },
-    { cat: "CHASSIS (Full Stack & UX)", items: [{ name: "Next.js", color: "#ffd500" }, { name: "React", color: "#41ff72" }, { name: "React Native", color: "#41ff72" }, { name: "TypeScript", color: "#41ff72" }, { name: "Flask", color: "#41ff72" }, { name: "HTML/CSS", color: "#41ff72" }, { name: ".NET", color: "#ffb36b" }] },
-    { cat: "AERODYNAMICS (Cloud Platforms)", items: [{ name: "Microsoft Fabric", color: "#ffd500" }, { name: "Azure Synapse", color: "#ffd500" }, { name: "Azure DevOps", color: "#ffd500" }, { name: "CI/CD", color: "#ffd500" }, { name: "Azure Data Factory", color: "#41ff72" }, { name: "ADLS", color: "#41ff72" }] },
-    { cat: "TELEMETRY (Developer Tools & Sim)", items: [{ name: "Git / GitHub", color: "#41ff72" }, { name: "Docker", color: "#41ff72" }, { name: "Unity", color: "#ffb36b" }, { name: "JIRA", color: "#ffb36b" }, { name: "AntiGravity", color: "#ffb36b" }] }
-  ];
+  const skills = SKILLS_DATA;
 
   return (
     <div
@@ -199,7 +171,7 @@ function GarageSection() {
       </div>
 
       <div style={{ borderTop: "1px solid #1c1c1f", paddingTop: "8px", marginTop: "14px" }}>
-        <p style={{ fontSize: "7.5px", color: "var(--steel)", fontFamily: "var(--font-mono)" }}>
+        <p style={{ fontSize: "9px", color: "var(--steel)", fontFamily: "var(--font-mono)" }}>
           [TIMING FEED LEGEND: <span style={{ color: "#ffd500" }}>■ GOLD</span> = CORE SPEC // <span style={{ color: "#41ff72" }}>■ GREEN</span> = PROFICIENT // <span style={{ color: "#ffb36b" }}>■ ORANGE</span> = FAMILIAR]
         </p>
       </div>
@@ -451,7 +423,7 @@ function RaceStrategySection() {
             ENGINEER NOTES
           </div>
           <div style={{ color: "var(--steel)", background: "#09090b", border: "1px solid #151518", padding: "8px", fontSize: "9px" }}>
-            "I enjoy building clean pipelines that process massive volumes, responsive technical panels that respect strict mechanical limits, and CI/CD integrations that automate operational friction away."
+            &quot;I enjoy building clean pipelines that process massive volumes, responsive technical panels that respect strict mechanical limits, and CI/CD integrations that automate operational friction away.&quot;
           </div>
         </div>
       </div>
@@ -482,7 +454,7 @@ function PitWallRadioSection() {
         setTimeout(() => {
           setIsExporting(false);
           playAudio('chirp');
-          window.open("/Prateek_resume.pdf", "_blank");
+          window.open(CONTACT.resume, "_blank");
         }, 300);
       }
       setExportProgress(current);
@@ -508,21 +480,22 @@ function PitWallRadioSection() {
 
       <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontFamily: "var(--font-mono)", fontSize: "10.5px" }}>
         <div>
-          <span style={{ color: "var(--orange)" }}>[PIT WALL]:</span> <span style={{ color: "var(--titanium)" }}>"Driver, box this lap. Confirm ingestion lines. Over."</span>
+          <span style={{ color: "var(--orange)" }}>[PIT WALL]:</span> <span style={{ color: "var(--titanium)" }}>&quot;Driver, box this lap. Confirm ingestion lines. Over.&quot;</span>
         </div>
         <div>
-          <span style={{ color: "#ffffff" }}>[DRIVER]:</span> <span style={{ color: "var(--steel)" }}>"Copy. Ingestion pathways active. Transmitting contact feeds."</span>
+          <span style={{ color: "#ffffff" }}>[DRIVER]:</span> <span style={{ color: "var(--steel)" }}>&quot;Copy. Ingestion pathways active. Transmitting contact feeds.&quot;</span>
         </div>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "6px", alignItems: "flex-start", marginTop: "16px" }}>
-        <a href="mailto:prateek19701@gmail.com" className="link-subtle" style={{ fontFamily: "var(--font-mono)", fontSize: "11px" }}>
-          EMAIL // prateek19701@gmail.com
+        <a href={`mailto:${CONTACT.email}`} className="link-subtle" style={{ fontFamily: "var(--font-mono)", fontSize: "11px" }}>
+          EMAIL // {CONTACT.email}
         </a>
-        <a href="https://github.com/33SN0W" target="_blank" rel="noopener noreferrer" className="link-subtle" style={{ fontFamily: "var(--font-mono)", fontSize: "11px" }}>
+        <CopyEmailButton />
+        <a href={CONTACT.github} target="_blank" rel="noopener noreferrer" className="link-subtle" style={{ fontFamily: "var(--font-mono)", fontSize: "11px" }}>
           GITHUB // github.com/33SN0W
         </a>
-        <a href="https://linkedin.com/in/prateek-00a970228" target="_blank" rel="noopener noreferrer" className="link-subtle" style={{ fontFamily: "var(--font-mono)", fontSize: "11px" }}>
+        <a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer" className="link-subtle" style={{ fontFamily: "var(--font-mono)", fontSize: "11px" }}>
           LINKEDIN // linkedin.com/in/prateek-00a970228
         </a>
       </div>
@@ -534,7 +507,7 @@ function PitWallRadioSection() {
           </div>
         ) : (
           <a
-            href="/Prateek_resume.pdf"
+            href={CONTACT.resume}
             onClick={handleDownloadClick}
             className="link-subtle"
             style={{ borderBottom: "1px solid var(--orange)", fontFamily: "var(--font-mono)", fontSize: "10px", color: "var(--orange)" }}
@@ -551,10 +524,12 @@ function PitWallRadioSection() {
 function PosterModal() {
   const { focusedPoster, setFocusedPoster } = usePortfolio();
   const [animateProgress, setAnimateProgress] = useState(0);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(modalRef, !!focusedPoster, () => setFocusedPoster(null));
 
   useEffect(() => {
     if (!focusedPoster) return;
-    setAnimateProgress(0);
     let curr = 0;
     const interval = setInterval(() => {
       curr += 5;
@@ -564,202 +539,22 @@ function PosterModal() {
       }
       setAnimateProgress(curr);
     }, 16);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      setAnimateProgress(0);
+    };
   }, [focusedPoster]);
 
   if (!focusedPoster) return null;
 
-  const getPosterData = () => {
-    switch (focusedPoster) {
-      case "journey":
-        return {
-          title: "SYSTEMS ENGINEERING PATHWAY // CAREER JOURNEY",
-          subtitle: "Prateek // Systems Strategy & Data Ingestion",
-          sections: [
-            {
-              label: "2021 — CS INCEPTION (IIIT GUWAHATI)",
-              value: "B.Tech CSE entry. Developed core systems concepts: pointer manipulation, thread safety, process trees, and cache-aligned memory layouts in C++."
-            },
-            {
-              label: "2023 — SCALING PREDICTIONS (YOUTUBE AD RECOMMENDER)",
-              value: "Engineered NLP text preprocessing and lemmatization pipelines. Built TF-IDF and SVM classifiers to achieve 98% accuracy on video recommendation."
-            },
-            {
-              label: "2024 — ARCHITECTURE & CORE OPTIMIZATION",
-              value: "Designed hybrid memory-aware cache policies over LRU (ChampSim), improving LLC hit rates by 5%. Built academic research discovery engines using sentence-transformers."
-            },
-            {
-              label: "2025 - 2026 — CLOUD TELESCOPING & BIG DATA (MAQ SOFTWARE)",
-              value: "Software Engineer 1. Built PySpark ingestion pipelines handling 200M+ rows/day. Reduced runtime execution from 12h to 3h. Certified DP-600 and DP-700."
-            },
-            {
-              label: "2026 - 2028 — STRATEGIC MANAGEMENT (IIM MUMBAI)",
-              value: "MBA Core. Blending deep computational expertise with systems operations, supply chain strategy, and decision models."
-            }
-          ]
-        };
-      case "resume":
-        return {
-          title: "ENGINEERING SPEC SHEET // RESUME SUMMARY",
-          subtitle: "Prateek // Software Engineer & Systems Strategist",
-          sections: [
-            {
-              label: "PROPULSION SYSTEM (LANGUAGES & DATA)",
-              value: "C++, C#, Java, Python, SQL, KQL, PySpark, Data Warehousing, ETL Pipelines."
-            },
-            {
-              label: "CHASSIS & INSTRUMENTATION (FULL STACK)",
-              value: "Next.js, React, React Native, Node.js, Flask, TypeScript, HTML/CSS, .NET."
-            },
-            {
-              label: "AERODYNAMICS (CLOUD & DEVOPS)",
-              value: "Microsoft Fabric, Azure Synapse, Azure Data Factory, ADLS, Azure DevOps, CI/CD, Docker."
-            },
-            {
-              label: "WORK EXPERIENCE",
-              value: "Software Engineer 1 (Associate SE -> SE 1) @ MAQ Software (Jan 2025 - May 2026) // Noida, India"
-            },
-            {
-              label: "EDUCATION & CERTIFICATION",
-              value: "MBA Core @ IIM Mumbai (2026 - 2028) // B.Tech CSE @ IIIT Guwahati (2021 - 2025) // Certified DP-600 & DP-700"
-            }
-          ]
-        };
-      case "ferrari":
-        return {
-          title: "TECHNICAL DIRECTIVE // SCUDERIA FERRARI SF-24",
-          subtitle: "Dept. Motorsport // Maranello, Italy",
-          sections: [
-            {
-              label: "POWER UNIT // 066/12 HYBRID",
-              value: "90° 1.6L V6 Turbocharged Internal Combustion Engine + MGU-H (heat) + MGU-K (kinetic, recovering 120kW / 161HP). Total output ~1000 HP."
-            },
-            {
-              label: "CHASSIS & AERODYNAMICS",
-              value: "Molded honeycomb carbon-fiber composite. Pull-rod front suspension, push-rod rear suspension. Advanced high-rake ground effect venturi tunnels."
-            },
-            {
-              label: "HYBRID CACHE POLICY ALIGNMENT",
-              value: "Selected as the architectural blueprint for the Hybrid Memory-Aware Cache Policy. Translating complex power recovery parameters into high-efficiency memory access recency and eviction algorithms."
-            }
-          ]
-        };
-      case "ktm":
-        return {
-          title: "ENGINE BLOCK DETAIL // KTM RC16 MOTOGP V4",
-          subtitle: "Mattighofen, Austria // Ready To Race",
-          sections: [
-            {
-              label: "ENGINE CONFIGURATION // 75° V4",
-              value: "1000cc liquid-cooled V4, pneumatic valves, DOHC, dry sump lubrication. Max engine speed: 18,500 RPM. Max output: 265+ HP."
-            },
-            {
-              label: "CHASSIS KINEMATICS",
-              value: "Triangulated chromoly steel trellis frame. WP pressurized forks, aluminum swingarm. Kinematic link rear damper."
-            },
-            {
-              label: "ACADEMIC RECOMMENDATION ALIGNMENT",
-              value: "Selected as the blueprint for the NLP Research Recommendation engine. High-speed, multi-dimensional semantic retrieval resembling the pneumatic control valves of a V4 power unit."
-            }
-          ]
-        };
-      case "senna":
-        return {
-          title: "HISTORICAL LEGACY // AYRTON SENNA DA SILVA",
-          subtitle: "1960 - 1994 // Three-Times Formula 1 World Champion",
-          sections: [
-            {
-              label: "CHAMPIONSHIP PERFORMANCE",
-              value: "World Champion: 1988, 1990, 1991 (McLaren Honda). 41 GP wins, 65 pole positions, 80 podiums."
-            },
-            {
-              label: "MONACO GP SUPREMACY",
-              value: "6 victories at the Monaco Grand Prix, including 5 consecutive wins between 1989-1993. The ultimate testament to precision driving."
-            },
-            {
-              label: "RACING DOCTRINE",
-              value: "“If you no longer go for a gap that exists, you are no longer a racing driver.” Represents aggressive, relentless optimization and refusal to settle."
-            }
-          ]
-        };
-      case "senna2":
-        return {
-          title: "ACTIVE SUSPENSION DIAGRAM // AYRTON SENNA LOTUS 99T",
-          subtitle: "Formula 1 Season 1987 // Team Lotus // Honda V6 Turbo",
-          sections: [
-            {
-              label: "LOTUS ACTIVE SUSPENSION TECHNOLOGY",
-              value: "The first successful computer-controlled active suspension. Utilized hydraulic actuators driven by a computer processing chassis acceleration and height telemetry at 200 Hz."
-            },
-            {
-              label: "YOUTUBE RECOMMENDER ALIGNMENT",
-              value: "Selected as the blueprint for the YouTube Ad Recommender. Active optimization and NLP feature engineering to adapt to dynamic textual conditions under CPU latency bounds."
-            }
-          ]
-        };
-      case "helmet":
-        return {
-          title: "INSPIRATION SHIELD // SHOEI X-15",
-          subtitle: "Driver Inspirations & Systems Safety Philosophy",
-          sections: [
-            {
-              label: "LEGENDARY DRIVERS",
-              value: "Ayrton Senna (absolute, uncompromising focus), Charles Leclerc (mechanical precision under bounds), Marc Marquez (defying physics thresholds)."
-            },
-            {
-              label: "SYSTEM DESIGNERS",
-              value: "Adrian Newey (converting fluid dynamics into absolute mechanical downforce). Compiling data architectures with identical aerodynamic elegance."
-            },
-            {
-              label: "CHASSIS COHESION",
-              value: "Rigid composite outer structures protecting the inner processing core. Fallback failure limits and sandboxed container orchestration."
-            }
-          ]
-        };
-      case "notebook":
-        return {
-          title: "STRATEGIC DOCTRINE // SYSTEMS LOGBOOK",
-          subtitle: "Prateek's Core Architectural Rules",
-          sections: [
-            {
-              label: "RULE 01 // LEAVE NEGATIVE SPACE",
-              value: "Do not over-engineer. Confidence is found in simplicity. Build light, readable, highly observable nodes. Complexity is technical debt."
-            },
-            {
-              label: "RULE 02 // OBSERVABILITY IS NOT AN ADD-ON",
-              value: "Heartbeats, latency trackers, and data validation stages are built directly into initial design matrices, not as post-failure patches."
-            },
-            {
-              label: "RULE 03 // AUTOMATE COMPREHENSIVELY",
-              value: "Every deployment cycle, ETL ingestion, and testing pass must compile automatically. Manual steps are single points of failure."
-            }
-          ]
-        };
-      case "coffee":
-        return {
-          title: "INGESTION RATIOS // CAFFEINE STATUS",
-          subtitle: "Human-in-the-Loop Energy Analytics",
-          sections: [
-            {
-              label: "CAPACITY // 85% FULL",
-              value: "Double shot dark roast espresso. The physical fuel powering 2 AM cluster migrations, dependency resolutions, and canvas viewport builds."
-            },
-            {
-              label: "METRIC CONVERSIONS",
-              value: "C8H10N4O2 (caffeine) binds directly to human adenosine receptors, suppressing latency indicators in the carbon processing core."
-            }
-          ]
-        };
-      default:
-        return null;
-    }
-  };
-
-  const data = getPosterData();
+  const data = focusedPoster in POSTER_DATA ? POSTER_DATA[focusedPoster as PosterKey] : null;
   if (!data) return null;
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="poster-modal-title"
       onClick={() => setFocusedPoster(null)}
       style={{
         position: "fixed",
@@ -775,6 +570,7 @@ function PosterModal() {
       }}
     >
       <div
+        ref={modalRef}
         onClick={(e) => e.stopPropagation()}
         style={{
           width: "100%",
@@ -788,14 +584,17 @@ function PosterModal() {
           gap: "18px",
           boxShadow: "0 0 32px rgba(255, 40, 0, 0.15)",
           maxHeight: "90vh",
-          overflowY: "auto"
+          overflowY: "auto",
         }}
       >
         <div style={{ borderBottom: "1px solid #222", paddingBottom: "10px" }}>
-          <div style={{ color: "var(--orange)", fontFamily: "var(--font-mono)", fontSize: "9px", letterSpacing: "0.15em" }}>
+          <div style={{ color: "var(--orange)", fontFamily: "var(--font-mono)", fontSize: "10px", letterSpacing: "0.15em" }}>
             SPECIFICATION REPORT
           </div>
-          <h2 style={{ color: "#ffffff", fontFamily: "var(--font-mono)", fontSize: "13px", marginTop: "4px", fontWeight: "bold" }}>
+          <h2
+            id="poster-modal-title"
+            style={{ color: "#ffffff", fontFamily: "var(--font-mono)", fontSize: "13px", marginTop: "4px", fontWeight: "bold" }}
+          >
             {data.title}
           </h2>
           <div style={{ color: "var(--steel)", fontFamily: "var(--font-mono)", fontSize: "10px", marginTop: "2px" }}>
@@ -821,7 +620,9 @@ function PosterModal() {
 
         <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "6px", borderTop: "1px solid #222", paddingTop: "10px" }}>
           <button
+            type="button"
             onClick={() => setFocusedPoster(null)}
+            aria-label="Close poster details"
             style={{
               background: "transparent",
               border: "1px solid var(--steel)",
@@ -987,7 +788,7 @@ function HUDOverlay() {
     const timer = setTimeout(() => {
       setIsLoadingComplete(true);
       setLoadingProgress(100);
-    }, 1500);
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -1183,7 +984,7 @@ function LiveTelemetryStrip() {
       {/* Metrics Layout */}
       <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <span style={{ color: "var(--steel)" }}>RPM</span>
+          <span style={{ color: "var(--steel)" }}>SIM RPM</span>
           <span style={{ color: themeColor, fontWeight: "bold" }}>[{rpmBar}] {rpmVal.toLocaleString()}</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
@@ -1191,7 +992,7 @@ function LiveTelemetryStrip() {
           <span style={{ color: "#41ff72", fontWeight: "bold" }}>NOMINAL</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <span style={{ color: "var(--steel)" }}>CPU</span>
+          <span style={{ color: "var(--steel)" }}>SIM CPU</span>
           <span style={{ color: "#ffffff" }}>{cpuUsage}%</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
@@ -1207,7 +1008,7 @@ function LiveTelemetryStrip() {
       {/* Recruiter Quick Actions */}
       <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
         <a 
-          href="/Prateek_resume.pdf" 
+          href={CONTACT.resume} 
           target="_blank" 
           rel="noopener noreferrer" 
           style={{ 
@@ -1232,13 +1033,13 @@ function LiveTelemetryStrip() {
           [RESUME ↗]
         </a>
         <a 
-          href="mailto:prateek19701@gmail.com" 
+          href={`mailto:${CONTACT.email}`} 
           style={{ color: "#ffffff", textDecoration: "none", borderBottom: "1px solid var(--steel)" }}
         >
           [EMAIL]
         </a>
         <a 
-          href="https://github.com/33SN0W" 
+          href={CONTACT.github} 
           target="_blank" 
           rel="noopener noreferrer" 
           style={{ color: "#ffffff", textDecoration: "none", borderBottom: "1px solid var(--steel)" }}
@@ -1246,7 +1047,7 @@ function LiveTelemetryStrip() {
           [GITHUB]
         </a>
         <a 
-          href="https://linkedin.com/in/prateek-00a970228" 
+          href={CONTACT.linkedin} 
           target="_blank" 
           rel="noopener noreferrer" 
           style={{ color: "#ffffff", textDecoration: "none", borderBottom: "1px solid var(--steel)" }}
@@ -1260,12 +1061,14 @@ function LiveTelemetryStrip() {
 
 // ─── PROJECT DETAILS MODAL ──────────────────────────────
 function ProjectModal() {
-  const { focusedProjectIndex, setFocusedProjectIndex, playAudio } = usePortfolio();
+  const { focusedProjectIndex, setFocusedProjectIndex } = usePortfolio();
   const [animateProgress, setAnimateProgress] = useState(0);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(modalRef, focusedProjectIndex !== null, () => setFocusedProjectIndex(null));
 
   useEffect(() => {
     if (focusedProjectIndex === null) return;
-    setAnimateProgress(0);
     let curr = 0;
     const interval = setInterval(() => {
       curr += 5;
@@ -1275,7 +1078,10 @@ function ProjectModal() {
       }
       setAnimateProgress(curr);
     }, 16);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      setAnimateProgress(0);
+    };
   }, [focusedProjectIndex]);
 
   if (focusedProjectIndex === null) return null;
@@ -1285,6 +1091,9 @@ function ProjectModal() {
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="project-modal-title"
       onClick={() => setFocusedProjectIndex(null)}
       style={{
         position: "fixed",
@@ -1300,6 +1109,7 @@ function ProjectModal() {
       }}
     >
       <div
+        ref={modalRef}
         onClick={(e) => e.stopPropagation()}
         style={{
           width: "100%",
@@ -1320,7 +1130,10 @@ function ProjectModal() {
           <div style={{ color: "var(--orange)", fontFamily: "var(--font-mono)", fontSize: "9px", letterSpacing: "0.15em" }}>
             PROJECT SPECIFICATION REPORT
           </div>
-          <h2 style={{ color: "#ffffff", fontFamily: "var(--font-mono)", fontSize: "14px", marginTop: "4px", fontWeight: "bold" }}>
+          <h2
+            id="project-modal-title"
+            style={{ color: "#ffffff", fontFamily: "var(--font-mono)", fontSize: "14px", marginTop: "4px", fontWeight: "bold" }}
+          >
             {data.name.toUpperCase()}
           </h2>
           <div style={{ color: "var(--steel)", fontFamily: "var(--font-mono)", fontSize: "10px", marginTop: "2px" }}>
@@ -1436,7 +1249,9 @@ function ProjectModal() {
 
         <div style={{ display: "flex", justifyContent: "flex-end", borderTop: "1px solid #222", paddingTop: "10px" }}>
           <button
+            type="button"
             onClick={() => setFocusedProjectIndex(null)}
+            aria-label="Close project details"
             style={{
               background: "transparent",
               border: "1px solid var(--steel)",

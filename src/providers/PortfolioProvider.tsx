@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
 import { getSection, subscribe } from "@/systems/scroll";
 import { LIVERIES, LiveryType } from "@/config/colors";
 
@@ -27,11 +27,10 @@ export const PortfolioContext = createContext<PortfolioContextProps | undefined>
 
 let audioCtx: AudioContext | null = null;
 let humOsc: OscillatorNode | null = null;
-let humGain: GainNode | null = null;
 
 function getAudioContext() {
   if (!audioCtx) {
-    audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    audioCtx = new (window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext)();
   }
   return audioCtx;
 }
@@ -55,7 +54,6 @@ export function playProceduralAudio(type: 'chirp' | 'static' | 'sweep' | 'hum') 
       gain.connect(ctx.destination);
       osc.start();
       humOsc = osc;
-      humGain = gain;
     } else if (type === 'chirp') {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -109,6 +107,11 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
   const [livery, setLivery] = useState<LiveryType>("ferrari");
   const [activeBikePart, setActiveBikePart] = useState<'frame' | 'engine' | 'suspension' | 'rear_section' | 'electrical' | null>(null);
   const [isMuted, setIsMuted] = useState(false);
+  const isMutedRef = useRef(isMuted);
+
+  useEffect(() => {
+    isMutedRef.current = isMuted;
+  }, [isMuted]);
 
   const playAudio = (type: 'chirp' | 'static' | 'sweep' | 'hum') => {
     if (isMuted) return;
@@ -122,9 +125,8 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
         try {
           humOsc.stop();
           humOsc.disconnect();
-        } catch (e) {}
+        } catch {}
         humOsc = null;
-        humGain = null;
       }
     } else {
       if (audioCtx && audioCtx.state !== "suspended") {
@@ -147,8 +149,8 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
     const handleScrollUpdate = () => {
       const nextSec = getSection();
       setActiveSection((prev) => {
-        if (prev !== nextSec) {
-          playProceduralAudio('sweep');
+        if (prev !== nextSec && !isMutedRef.current) {
+          playProceduralAudio("sweep");
         }
         return nextSec;
       });
@@ -156,16 +158,6 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
     handleScrollUpdate();
     return subscribe(handleScrollUpdate);
   }, []);
-
-  // Exit focus on scrolling or clicking elsewhere
-  useEffect(() => {
-    const handleScroll = () => {
-      if (focusedPoster) setFocusedPoster(null);
-      if (focusedProjectIndex !== null) setFocusedProjectIndex(null);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [focusedPoster, focusedProjectIndex]);
 
   return (
     <PortfolioContext.Provider

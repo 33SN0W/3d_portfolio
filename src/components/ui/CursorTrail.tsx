@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { usePortfolio } from "@/providers/PortfolioProvider";
 import { LIVERIES } from "@/config/colors";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface Point {
   x: number;
@@ -23,10 +24,12 @@ export default function CursorTrail() {
   const pointsRef = useRef<Point[]>([]);
   const mouseRef = useRef({ x: 0, y: 0 });
   const { livery } = usePortfolio();
+  const reducedMotion = useReducedMotion();
 
   const activeTheme = LIVERIES[livery] || LIVERIES.mclaren;
 
   useEffect(() => {
+    if (reducedMotion) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -114,7 +117,9 @@ export default function CursorTrail() {
       window.removeEventListener("mousemove", handleMouseMove);
       cancelAnimationFrame(animationId);
     };
-  }, [activeTheme]);
+  }, [activeTheme, reducedMotion]);
+
+  if (reducedMotion) return null;
 
   return (
     <canvas
