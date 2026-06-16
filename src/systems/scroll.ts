@@ -12,11 +12,12 @@ const _listeners: Set<() => void> = new Set();
 
 // Section boundaries (normalized 0–1)
 export const SECTIONS = {
-  PADDOCK:      { start: 0.00, end: 0.15, index: 0, label: "Paddock" },
-  GARAGE:       { start: 0.15, end: 0.35, index: 1, label: "Garage" },
-  RACE_HISTORY: { start: 0.35, end: 0.55, index: 2, label: "Race History" },
-  TROPHY_WALL:  { start: 0.55, end: 0.75, index: 3, label: "Trophy Wall" },
-  PIT_WALL:     { start: 0.75, end: 1.00, index: 4, label: "Pit Wall Radio" },
+  PADDOCK:       { start: 0.00, end: 0.16, index: 0, label: "Paddock" },
+  GARAGE:        { start: 0.16, end: 0.32, index: 1, label: "Garage" },
+  BUILD_LOG:     { start: 0.32, end: 0.48, index: 2, label: "Build Log" },
+  RACE_HISTORY:  { start: 0.48, end: 0.64, index: 3, label: "Race History" },
+  RACE_STRATEGY: { start: 0.64, end: 0.80, index: 4, label: "Race Strategy" },
+  PIT_WALL:      { start: 0.80, end: 1.00, index: 5, label: "Pit Wall" },
 } as const;
 
 export type SectionKey = keyof typeof SECTIONS;

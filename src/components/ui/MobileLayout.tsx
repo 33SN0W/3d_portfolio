@@ -135,9 +135,10 @@ const POSTER_DATA: Record<PosterKey, {
 const SECTIONS = [
   { id: "paddock", name: "PADDOCK", code: "SEC-01" },
   { id: "garage", name: "GARAGE", code: "SEC-02" },
-  { id: "history", name: "HISTORY", code: "SEC-03" },
-  { id: "blueprints", name: "BLUEPRINTS", code: "SEC-04" },
-  { id: "radio", name: "PIT WALL", code: "SEC-05" }
+  { id: "build_log", name: "BUILD LOG", code: "SEC-03" },
+  { id: "history", name: "RACE HISTORY", code: "SEC-04" },
+  { id: "strategy", name: "RACE STRATEGY", code: "SEC-05" },
+  { id: "radio", name: "PIT WALL", code: "SEC-06" }
 ];
 
 export default function MobileLayout() {
@@ -399,50 +400,16 @@ export default function MobileLayout() {
         </div>
       </section>
 
-      {/* ─── WORK DEPLOYMENTS (TIMELINE) ────────────────────── */}
+      {/* ─── BUILD LOG (PROJECT BLUEPRINTS) ─────────────────── */}
       <section
-        id="history"
+        id="build_log"
         style={{
           padding: "48px 20px",
           borderBottom: "1px solid #111"
         }}
       >
         <span style={{ color: "var(--steel)", fontFamily: "var(--font-mono)", fontSize: "9px", letterSpacing: "0.15em", marginBottom: "8px", display: "block" }}>
-          SECTOR 3 // WORK TIMELINE
-        </span>
-        <h2 style={{ fontFamily: "var(--font-mono)", fontSize: "16px", fontWeight: "bold", textTransform: "uppercase", borderBottom: "1px solid #222", paddingBottom: "6px", marginBottom: "20px" }}>
-          TECHNICAL DEPLOYMENTS // TIMELINE REPORT
-        </h2>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-          {timeline.map((t, idx) => (
-            <div key={idx} style={{ display: "flex", flexDirection: "column", gap: "6px", borderBottom: idx < timeline.length - 1 ? "1px solid #141416" : "none", paddingBottom: "16px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", fontFamily: "var(--font-mono)" }}>
-                <span style={{ color: "var(--orange)", fontSize: "11px", fontWeight: "bold" }}>{t.station}</span>
-                <span style={{ color: "var(--steel)", fontSize: "9px" }}>{t.date}</span>
-              </div>
-              <h3 style={{ color: "#ffffff", fontFamily: "var(--font-mono)", fontSize: "12px", fontWeight: "bold" }}>
-                {t.location}
-              </h3>
-              <div style={{ color: "var(--orange)", fontFamily: "var(--font-mono)", fontSize: "9px", marginTop: "2px", letterSpacing: "0.02em" }}>{t.role.toUpperCase()}</div>
-              <p style={{ color: "var(--steel)", fontSize: "11px", lineHeight: "1.5", fontFamily: "var(--font-display)", marginTop: "4px" }}>
-                {t.details}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ─── TROPHY WALL (BLUEPRINTS) ───────────────────────── */}
-      <section
-        id="blueprints"
-        style={{
-          padding: "48px 20px",
-          borderBottom: "1px solid #111"
-        }}
-      >
-        <span style={{ color: "var(--steel)", fontFamily: "var(--font-mono)", fontSize: "9px", letterSpacing: "0.15em", marginBottom: "8px", display: "block" }}>
-          SECTOR 4 // TROPHY WALL
+          SECTOR 3 // BUILD LOG
         </span>
         <h2 style={{ fontFamily: "var(--font-mono)", fontSize: "16px", fontWeight: "bold", textTransform: "uppercase", borderBottom: "1px solid #222", paddingBottom: "6px", marginBottom: "12px" }}>
           BLUEPRINT SPECIFICATIONS
@@ -460,7 +427,7 @@ export default function MobileLayout() {
               style={{
                 background: "#0a0a0c",
                 border: "1px solid #1a1a1a",
-                borderRadius: "4px",
+                borderRadius: "0px",
                 padding: "16px",
                 display: "flex",
                 flexDirection: "column",
@@ -490,6 +457,76 @@ export default function MobileLayout() {
         </div>
       </section>
 
+      {/* ─── WORK DEPLOYMENTS (TIMELINE) ────────────────────── */}
+      <section
+        id="history"
+        style={{
+          padding: "48px 20px",
+          borderBottom: "1px solid #111"
+        }}
+      >
+        <span style={{ color: "var(--steel)", fontFamily: "var(--font-mono)", fontSize: "9px", letterSpacing: "0.15em", marginBottom: "8px", display: "block" }}>
+          SECTOR 4 // RACE HISTORY
+        </span>
+        <h2 style={{ fontFamily: "var(--font-mono)", fontSize: "16px", fontWeight: "bold", textTransform: "uppercase", borderBottom: "1px solid #222", paddingBottom: "6px", marginBottom: "20px" }}>
+          RACE HISTORY // EXPERIENCE LOGS
+        </h2>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+          {timeline.map((t, idx) => (
+            <div key={idx} style={{ display: "flex", flexDirection: "column", gap: "6px", borderBottom: idx < timeline.length - 1 ? "1px solid #141416" : "none", paddingBottom: "16px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", fontFamily: "var(--font-mono)" }}>
+                <span style={{ color: "var(--orange)", fontSize: "11px", fontWeight: "bold" }}>{t.station}</span>
+                <span style={{ color: "var(--steel)", fontSize: "9px" }}>{t.date}</span>
+              </div>
+              <h3 style={{ color: "#ffffff", fontFamily: "var(--font-mono)", fontSize: "12px", fontWeight: "bold" }}>
+                {t.location}
+              </h3>
+              <div style={{ color: "var(--orange)", fontFamily: "var(--font-mono)", fontSize: "9px", marginTop: "2px", letterSpacing: "0.02em" }}>{t.role.toUpperCase()}</div>
+              <p style={{ color: "var(--steel)", fontSize: "11px", lineHeight: "1.5", fontFamily: "var(--font-display)", marginTop: "4px" }}>
+                {t.details}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── RACE STRATEGY (LEADERSHIP) ─────────────────────── */}
+      <section
+        id="strategy"
+        style={{
+          padding: "48px 20px",
+          borderBottom: "1px solid #111"
+        }}
+      >
+        <span style={{ color: "var(--steel)", fontFamily: "var(--font-mono)", fontSize: "9px", letterSpacing: "0.15em", marginBottom: "8px", display: "block" }}>
+          SECTOR 5 // RACE STRATEGY
+        </span>
+        <h2 style={{ fontFamily: "var(--font-mono)", fontSize: "16px", fontWeight: "bold", textTransform: "uppercase", borderBottom: "1px solid #222", paddingBottom: "6px", marginBottom: "20px" }}>
+          DECISION MATRIX // LEADERSHIP
+        </h2>
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px", fontFamily: "var(--font-mono)", fontSize: "10.5px", lineHeight: "1.4" }}>
+          <div style={{ borderBottom: "1px solid #141416", paddingBottom: "8px" }}>
+            <div style={{ color: "var(--orange)", fontWeight: "bold" }}>[DECISION 01: SIMPLICITY]</div>
+            <div style={{ color: "var(--steel)", marginTop: "2px" }}>
+              Choosing lightweight structures (triangulated space frames) over heavy abstractions to optimize runtime speed.
+            </div>
+          </div>
+          <div style={{ borderBottom: "1px solid #141416", paddingBottom: "8px" }}>
+            <div style={{ color: "var(--orange)", fontWeight: "bold" }}>[DECISION 02: OBSERVABILITY]</div>
+            <div style={{ color: "var(--steel)", marginTop: "2px" }}>
+              Telemetry pipelines built-in from start line, guaranteeing immediate system health feedback.
+            </div>
+          </div>
+          <div style={{ background: "#0a0a0c", border: "1px solid #222", padding: "12px", borderRadius: "2px" }}>
+            <div style={{ color: "#ffffff", fontWeight: "bold", marginBottom: "4px" }}>ENGINEER NOTES // PHILOSOPHY</div>
+            <div style={{ color: "var(--steel)" }}>
+              "I build scalable big data pipelines, highly responsive modular UI screens, and robust cloud automation workflows."
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ─── PIT WALL RADIO (CONTACT) ───────────────────────── */}
       <section
         id="radio"
@@ -498,7 +535,7 @@ export default function MobileLayout() {
         }}
       >
         <span style={{ color: "var(--steel)", fontFamily: "var(--font-mono)", fontSize: "9px", letterSpacing: "0.15em", marginBottom: "8px", display: "block" }}>
-          SECTOR 5 // PIT WALL RADIO
+          SECTOR 6 // PIT WALL RADIO
         </span>
         <h2 style={{ fontFamily: "var(--font-mono)", fontSize: "16px", fontWeight: "bold", textTransform: "uppercase", borderBottom: "1px solid #222", paddingBottom: "6px", marginBottom: "20px" }}>
           TEAM-RADIO TRANSCRIPT

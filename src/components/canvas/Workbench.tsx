@@ -423,6 +423,7 @@ function BrakeRotorLamp({ position, rotation, steelMat, aluminumMat }: { positio
 
 // ─── SHOEI HELMET (Desk item) ───────────────────────────
 function ShoeiHelmet({ position, rotation, scale = 1 }: { position: [number, number, number]; rotation: [number, number, number]; scale?: number }) {
+  const { setFocusedPoster } = usePortfolio();
   const shellMat = useMemo(() => {
     return new THREE.MeshPhysicalMaterial({
       color: new THREE.Color("#eceff1"), // Glossy white paint
@@ -463,7 +464,23 @@ function ShoeiHelmet({ position, rotation, scale = 1 }: { position: [number, num
   }, []);
 
   return (
-    <group position={position} rotation={rotation} scale={scale}>
+    <group 
+      position={position} 
+      rotation={rotation} 
+      scale={scale}
+      onClick={(e) => {
+        e.stopPropagation();
+        setFocusedPoster("helmet");
+      }}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        document.body.style.cursor = "pointer";
+      }}
+      onPointerOut={(e) => {
+        e.stopPropagation();
+        document.body.style.cursor = "auto";
+      }}
+    >
       {/* Stretched aerodynamic inner group */}
       <group scale={[0.96, 1.0, 1.08]}>
         {/* Main outer shell structure */}
@@ -692,12 +709,11 @@ function LaptopIdleScreen({ livery, setIsLaptopActive }: LaptopIdleScreenProps) 
     "prateek@engine:~$ whoami",
     "Prateek // Systems & Data Architect",
     "prateek@engine:~$ load --telemetry",
-    "Ingesting Spark cluster node stats...",
+    "Ingesting Spark cluster stats...",
     "Telemetry link: SECURE // PORT 443",
     "Ingestion feed rate: 1000 Hz",
-    "System status: TELEMETRY ACTIVE",
-    "Ready to compile portfolio database.",
-    "------------------------------------",
+    "System status: NOMINAL",
+    "--------------------------------",
     "[CLICK SCREEN TO INGEST PORTFOLIO]"
   ], []);
 
@@ -713,7 +729,7 @@ function LaptopIdleScreen({ livery, setIsLaptopActive }: LaptopIdleScreenProps) 
       if (charIdx < targetText.length) {
         setCurrentLine(targetText.slice(0, charIdx + 1));
         charIdx++;
-        setTimeout(typeChar, 30 + Math.random() * 20);
+        setTimeout(typeChar, 25 + Math.random() * 15);
       } else {
         // Line complete
         setLines(prev => [...prev, targetText]);
@@ -728,7 +744,7 @@ function LaptopIdleScreen({ livery, setIsLaptopActive }: LaptopIdleScreenProps) 
             typeChar();
           }, 3000);
         } else {
-          setTimeout(typeChar, 500);
+          setTimeout(typeChar, 350);
         }
       }
     };
@@ -747,31 +763,53 @@ function LaptopIdleScreen({ livery, setIsLaptopActive }: LaptopIdleScreenProps) 
       style={{
         width: "100%",
         height: "100%",
-        padding: "16px",
+        padding: "12px",
         boxSizing: "border-box",
-        background: "#080809",
+        background: "#050506",
         color: themeColor,
         fontFamily: "var(--font-mono)",
-        fontSize: "9.5px",
-        lineHeight: "1.4",
+        fontSize: "8.5px",
+        lineHeight: "1.35",
         display: "flex",
-        flexDirection: "column",
-        gap: "2px",
-        textShadow: `0 0 2px ${themeColor}66`,
-        opacity: 0.9,
+        textShadow: `0 0 2px ${themeColor}55`,
+        opacity: 0.95,
         overflow: "hidden",
         cursor: "pointer"
       }}
     >
-      {lines.map((l, i) => (
-        <div key={i} style={{ color: l.startsWith("prateek") ? "#707072" : l.startsWith("[CLICK") ? "#ffffff" : themeColor }}>{l}</div>
-      ))}
-      {currentLine && (
+      {/* Left Column: Terminal console */}
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "2px", overflow: "hidden" }}>
+        {lines.map((l, i) => (
+          <div key={i} style={{ color: l.startsWith("prateek") ? "#707072" : l.startsWith("[CLICK") ? "#ffffff" : themeColor }}>{l}</div>
+        ))}
+        {currentLine && (
+          <div>
+            <span style={{ color: currentLine.startsWith("prateek") ? "#707072" : themeColor }}>{currentLine}</span>
+            <span style={{ animation: "pulse 0.8s infinite" }}>_</span>
+          </div>
+        )}
+      </div>
+
+      {/* Right Column: Telemetry Bar Chart */}
+      <div style={{ width: "95px", borderLeft: "1px solid rgba(255, 255, 255, 0.1)", paddingLeft: "10px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
         <div>
-          <span style={{ color: currentLine.startsWith("prateek") ? "#707072" : themeColor }}>{currentLine}</span>
-          <span style={{ animation: "pulse 1s infinite" }}>_</span>
+          <div style={{ fontSize: "6.5px", color: "var(--steel)" }}>RPM MONITOR</div>
+          <div style={{ fontSize: "8px", fontWeight: "bold", color: "#ffffff", marginTop: "1px" }}>8,500 RPM</div>
         </div>
-      )}
+        <div style={{ display: "flex", alignItems: "flex-end", height: "55px", gap: "4px", borderBottom: "1px solid rgba(255, 255, 255, 0.1)", paddingBottom: "4px" }}>
+          {/* Animated bars */}
+          <div style={{ width: "7px", background: themeColor, animation: "bar-grow 1.2s infinite ease-in-out", borderRadius: "1px 1px 0 0" }} />
+          <div style={{ width: "7px", background: themeColor, animation: "bar-grow-fast 0.8s infinite ease-in-out", borderRadius: "1px 1px 0 0" }} />
+          <div style={{ width: "7px", background: themeColor, animation: "bar-grow-slow 1.6s infinite ease-in-out", borderRadius: "1px 1px 0 0" }} />
+          <div style={{ width: "7px", background: themeColor, animation: "bar-grow 1.0s infinite ease-in-out 0.2s", borderRadius: "1px 1px 0 0" }} />
+          <div style={{ width: "7px", background: themeColor, animation: "bar-grow-fast 1.4s infinite ease-in-out 0.1s", borderRadius: "1px 1px 0 0" }} />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "1px", fontSize: "6.5px", color: "var(--steel)" }}>
+          <div>FLOW: <span style={{ color: "#00ff00" }}>100%</span></div>
+          <div>TEMP: <span style={{ color: "#ffffff" }}>82°C</span></div>
+          <div>SYS: <span style={{ color: "#00ff00" }}>NOMINAL</span></div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -1005,6 +1043,7 @@ function Laptop({ position, rotation }: LaptopProps) {
 
 // ─── NOTEBOOK ────────────────────────────────────────────
 function Notebook({ position, rotation }: { position: [number, number, number]; rotation: [number, number, number] }) {
+  const { setFocusedPoster } = usePortfolio();
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
@@ -1022,7 +1061,22 @@ function Notebook({ position, rotation }: { position: [number, number, number]; 
   }, [pageTex]);
 
   return (
-    <group position={position} rotation={rotation}>
+    <group 
+      position={position} 
+      rotation={rotation}
+      onClick={(e) => {
+        e.stopPropagation();
+        setFocusedPoster("notebook");
+      }}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        document.body.style.cursor = "pointer";
+      }}
+      onPointerOut={(e) => {
+        e.stopPropagation();
+        document.body.style.cursor = "auto";
+      }}
+    >
       {/* Leather cover */}
       <mesh castShadow position={[0, 0.0015, 0]} material={coverMat}>
         <boxGeometry args={[0.23, 0.003, 0.16]} />
@@ -1099,6 +1153,7 @@ function SteamParticles() {
 
 // ─── COFFEE MUG ──────────────────────────────────────────
 function CoffeeMug({ position }: { position: [number, number, number] }) {
+  const { setFocusedPoster } = usePortfolio();
   const whiteCeramicMat = useMemo(() => {
     return new THREE.MeshPhysicalMaterial({
       color: new THREE.Color("#eaeaea"),
@@ -1118,7 +1173,21 @@ function CoffeeMug({ position }: { position: [number, number, number] }) {
   }, []);
 
   return (
-    <group position={position}>
+    <group 
+      position={position}
+      onClick={(e) => {
+        e.stopPropagation();
+        setFocusedPoster("coffee");
+      }}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        document.body.style.cursor = "pointer";
+      }}
+      onPointerOut={(e) => {
+        e.stopPropagation();
+        document.body.style.cursor = "auto";
+      }}
+    >
       {/* Mug Body */}
       <mesh castShadow position={[0, 0.045, 0]} material={whiteCeramicMat}>
         <cylinderGeometry args={[0.045, 0.045, 0.09, 24]} />

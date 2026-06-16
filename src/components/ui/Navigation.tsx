@@ -8,7 +8,7 @@ import { LIVERIES } from "@/config/colors";
 const SECTION_KEYS = Object.keys(SECTIONS) as SectionKey[];
 
 export default function Navigation() {
-  const { activeSection, livery } = usePortfolio();
+  const { activeSection, livery, isMuted, setIsMuted, playAudio } = usePortfolio();
   const [activeSecIdx, setActiveSecIdx] = useState(0);
   const [lapCount, setLapCount] = useState(1);
   const lapTimeRef = useRef<HTMLSpanElement>(null);
@@ -156,6 +156,55 @@ export default function Navigation() {
 
       {/* Right: Lap Timer */}
       <div style={{ display: "flex", alignItems: "center", gap: "24px", textAlign: "right" }}>
+        
+        {/* Audio Speaker Mute Toggle */}
+        <button
+          onClick={() => {
+            setIsMuted(!isMuted);
+            // Play physical chirp feedback immediately if unmuting
+            if (isMuted) {
+              try {
+                // Procedural audio plays directly
+                const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(880, ctx.currentTime);
+                gain.gain.setValueAtTime(0.012, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.08);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.08);
+              } catch(e){}
+            }
+          }}
+          style={{
+            background: "transparent",
+            border: "1px solid rgba(255, 255, 255, 0.15)",
+            borderRadius: "2px",
+            color: isMuted ? "var(--steel)" : "var(--orange)",
+            fontFamily: "var(--font-mono)",
+            fontSize: "9px",
+            padding: "4px 8px",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            transition: "all 0.2s ease",
+            borderColor: isMuted ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 40, 0, 0.3)"
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.borderColor = isMuted ? "rgba(255, 255, 255, 0.3)" : "var(--orange)";
+            e.currentTarget.style.color = "#ffffff";
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.borderColor = isMuted ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 40, 0, 0.3)";
+            e.currentTarget.style.color = isMuted ? "var(--steel)" : "var(--orange)";
+          }}
+        >
+          <span>{isMuted ? "COMMS OFF ✖" : "COMMS ON 📻"}</span>
+        </button>
 
         {/* Stopwatch Realtime Display */}
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>

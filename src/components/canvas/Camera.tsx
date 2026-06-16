@@ -19,16 +19,18 @@ import { usePortfolio } from "@/providers/PortfolioProvider";
 
 // Camera keyframes — position and look target at each scroll progress
 const KEYFRAMES = [
-  { at: 0.00, pos: [0, 1.4, 4.0],   look: [0, 0.4, 0] },       // Sector 1: Paddock established
-  { at: 0.10, pos: [0, 1.4, 4.0],   look: [0, 0.4, 0] },       // Linger paddock
-  { at: 0.20, pos: [1.35, 0.95, 1.3], look: [1.35, 0.5, 0.2] },   // Sector 2: Garage focus (KTM)
-  { at: 0.30, pos: [1.35, 0.95, 1.3], look: [1.35, 0.5, 0.2] },   // Linger Garage
-  { at: 0.40, pos: [0, 1.48, 0.85], look: [0, 1.55, -1.2] },   // Sector 3: Race History (Blueprints)
-  { at: 0.50, pos: [0, 1.48, 0.85], look: [0, 1.55, -1.2] },   // Linger History
-  { at: 0.60, pos: [0, 1.1, 0.9],   look: [0, 0.85, -0.75] },  // Sector 4: Trophy Wall (Laptop)
-  { at: 0.70, pos: [0, 1.1, 0.9],   look: [0, 0.85, -0.75] },  // Linger Trophy Wall
-  { at: 0.80, pos: [0, 1.35, 3.2],  look: [0, 0.7, -0.3] },    // Sector 5: Pit Wall Radio (Pull back)
-  { at: 1.00, pos: [0, 1.35, 3.2],  look: [0, 0.7, -0.3] },    // Linger Pit Wall
+  { at: 0.00, pos: [0, 1.4, 4.0],       look: [0, 0.4, 0] },         // Sector 1: Paddock (Intro)
+  { at: 0.10, pos: [0, 1.4, 4.0],       look: [0, 0.4, 0] },
+  { at: 0.16, pos: [1.35, 0.95, 1.3],  look: [1.35, 0.5, 0.2] },    // Sector 2: Garage (Tech Stack)
+  { at: 0.28, pos: [1.35, 0.95, 1.3],  look: [1.35, 0.5, 0.2] },
+  { at: 0.32, pos: [0, 1.48, 0.85],    look: [0, 1.55, -1.2] },     // Sector 3: Build Log (Blueprints/Projects)
+  { at: 0.44, pos: [0, 1.48, 0.85],    look: [0, 1.55, -1.2] },
+  { at: 0.48, pos: [0, 1.1, 0.9],      look: [0, 0.85, -0.75] },    // Sector 4: Race History (Experience)
+  { at: 0.60, pos: [0, 1.1, 0.9],      look: [0, 0.85, -0.75] },
+  { at: 0.64, pos: [0.38, 0.96, -0.18], look: [0.52, 0.84, -0.42] }, // Sector 5: Race Strategy (Leadership/Helmet)
+  { at: 0.76, pos: [0.38, 0.96, -0.18], look: [0.52, 0.84, -0.42] },
+  { at: 0.80, pos: [0, 1.35, 3.2],     look: [0, 0.7, -0.3] },      // Sector 6: Pit Wall (Contact)
+  { at: 1.00, pos: [0, 1.35, 3.2],     look: [0, 0.7, -0.3] },
 ] as const;
 
 /** Interpolate between keyframes based on progress */
@@ -49,10 +51,14 @@ function interpolateKeyframes(progress: number): { pos: THREE.Vector3; look: THR
   const range = b.at - a.at;
   const t = range > 0 ? (progress - a.at) / range : 0;
 
-  // Smooth easing — cubic ease-in-out for cinematic weight
-  const eased = t < 0.5
-    ? 4 * t * t * t
-    : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  // Smooth easeInOutExpo easing for mechanical visual precision
+  const eased = t === 0
+    ? 0
+    : t === 1
+    ? 1
+    : t < 0.5
+    ? Math.pow(2, 20 * t - 10) / 2
+    : (2 - Math.pow(2, -20 * t + 10)) / 2;
 
   return {
     pos: new THREE.Vector3(
@@ -75,6 +81,10 @@ const POSTER_TARGETS: Record<string, { pos: [number, number, number]; look: [num
   ktm:      { pos: [-1.65, 1.62, -0.72], look: [-1.65, 1.62, -1.2] },
   senna:    { pos: [1.1, 1.65, -0.72],   look: [1.1, 1.65, -1.2] },
   senna2:   { pos: [1.65, 1.62, -0.72],  look: [1.65, 1.62, -1.2] },
+  helmet:   { pos: [0.38, 0.96, -0.18],  look: [0.52, 0.84, -0.42] },
+  notebook: { pos: [-0.34, 0.94, -0.28], look: [-0.48, 0.75, -0.55] },
+  coffee:   { pos: [-0.24, 0.94, -0.42], look: [-0.38, 0.75, -0.7] },
+  bike:     { pos: [2.05, 0.7, 1.2],     look: [1.35, 0.5, 0.2] },
 };
 
 export default function Camera() {
@@ -98,8 +108,8 @@ export default function Camera() {
     const breathingY = isZoomed ? 0 : Math.cos(time * 0.15) * 0.01 + Math.sin(time * 0.33) * 0.003;
     const breathingZ = isZoomed ? 0 : Math.sin(time * 0.08) * 0.008;
 
-    // Mouse parallax — narrow translational limits (disable when zoomed in for precision)
-    const mouseScale = 0.08;
+    // Mouse parallax — dampened to 0.04 for premium restraint
+    const mouseScale = 0.04;
     const targetMouseX = isZoomed ? 0 : pointer.x * mouseScale;
     const targetMouseY = isZoomed ? 0 : pointer.y * mouseScale * 0.5;
 

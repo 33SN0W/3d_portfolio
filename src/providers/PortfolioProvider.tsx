@@ -17,6 +17,8 @@ interface PortfolioContextProps {
   activeBikePart: 'frame' | 'engine' | 'suspension' | 'rear_section' | 'electrical' | null;
   setActiveBikePart: (part: 'frame' | 'engine' | 'suspension' | 'rear_section' | 'electrical' | null) => void;
   playAudio: (type: 'chirp' | 'static' | 'sweep' | 'hum') => void;
+  isMuted: boolean;
+  setIsMuted: (val: boolean) => void;
 }
 
 export const PortfolioContext = createContext<PortfolioContextProps | undefined>(undefined);
@@ -103,10 +105,30 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
   const [focusedPoster, setFocusedPoster] = useState<string | null>(null);
   const [livery, setLivery] = useState<LiveryType>("ferrari");
   const [activeBikePart, setActiveBikePart] = useState<'frame' | 'engine' | 'suspension' | 'rear_section' | 'electrical' | null>(null);
+  const [isMuted, setIsMuted] = useState(false);
 
   const playAudio = (type: 'chirp' | 'static' | 'sweep' | 'hum') => {
+    if (isMuted) return;
     playProceduralAudio(type);
   };
+
+  // Manage background hum status based on mute state
+  useEffect(() => {
+    if (isMuted) {
+      if (humOsc) {
+        try {
+          humOsc.stop();
+          humOsc.disconnect();
+        } catch (e) {}
+        humOsc = null;
+        humGain = null;
+      }
+    } else {
+      if (audioCtx && audioCtx.state !== "suspended") {
+        playProceduralAudio('hum');
+      }
+    }
+  }, [isMuted]);
 
   // Dynamically map CSS color variables to the HTML root node on livery updates
   useEffect(() => {
@@ -156,6 +178,8 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
         activeBikePart,
         setActiveBikePart,
         playAudio,
+        isMuted,
+        setIsMuted,
       }}
     >
       {children}

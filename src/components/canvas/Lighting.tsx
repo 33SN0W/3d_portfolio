@@ -19,15 +19,20 @@ export default function Lighting() {
   const { scene } = useThree();
 
   useEffect(() => {
-    if (keySpotRef.current) {
-      const target = new THREE.Object3D();
-      target.position.set(0, 0.4, -0.3);
-      scene.add(target);
-      keySpotRef.current.target = target;
-      return () => {
-        scene.remove(target);
-      };
-    }
+    const keyTarget = new THREE.Object3D();
+    keyTarget.position.set(0, 0.4, -0.3);
+    scene.add(keyTarget);
+    if (keySpotRef.current) keySpotRef.current.target = keyTarget;
+
+    const bikeTarget = new THREE.Object3D();
+    bikeTarget.position.set(1.35, 0.5, 0.2); // Center of KTM Duke bike
+    scene.add(bikeTarget);
+    if (bikeRef.current) bikeRef.current.target = bikeTarget;
+
+    return () => {
+      scene.remove(keyTarget);
+      scene.remove(bikeTarget);
+    };
   }, [scene]);
 
   return (
@@ -66,14 +71,15 @@ export default function Lighting() {
         decay={2.2}
       />
 
-      {/* Motorcycle rim lighting — capturing metal contours */}
+      {/* Motorcycle rim lighting — capturing metal contours from behind */}
       <spotLight
-        position={[2.8, 2.4, -0.5]}
-        color="#ffd4a8"
-        intensity={140}
-        distance={6}
-        angle={Math.PI / 5}
-        penumbra={0.6}
+        ref={bikeRef}
+        position={[2.2, 0.8, -1.2]}
+        color="#ff3a00"
+        intensity={160}
+        distance={5}
+        angle={Math.PI / 4}
+        penumbra={0.5}
         decay={1.8}
       />
 

@@ -65,15 +65,14 @@ export const palette = {
   orangeGlow: "#ff8a30",
 } as const;
 
-export type LiveryType = "mclaren" | "ferrari" | "mercedes" | "camel" | "marlboro" | "redbull";
+export type LiveryType = "mclaren" | "ferrari" | "ktm" | "camel" | "porsche";
 
 export const LIVERIES: Record<LiveryType, { color: string; glow: string; label: string }> = {
   mclaren: { color: "#ff6900", glow: "#ff8a30", label: "MCLAREN PAPAYA" },
-  ferrari: { color: "#ff1800", glow: "#ff4f33", label: "FERRARI ROSSO" },
-  mercedes: { color: "#00ffcc", glow: "#4dffd2", label: "MERCEDES SILVER" },
-  camel: { color: "#fdb913", glow: "#fdcb4a", label: "CAMEL RACING" },
-  marlboro: { color: "#ff3333", glow: "#ff6666", label: "MARLBORO SPEED" },
-  redbull: { color: "#0066ff", glow: "#3385ff", label: "RED BULL JAPAN" }
+  ferrari: { color: "#ff2800", glow: "#ff5033", label: "FERRARI ROSSO" },
+  ktm: { color: "#ff5000", glow: "#ff7c33", label: "KTM FACTORY" },
+  camel: { color: "#ffd500", glow: "#ffdf33", label: "CAMEL RACING" },
+  porsche: { color: "#d81e05", glow: "#ff3c14", label: "PORSCHE DESIGN" }
 };
 
 /** The clear color for the renderer. This is what darkness looks like. */
