@@ -18,6 +18,7 @@ import { LIVERIES } from "@/config/colors";
 /** Computes section-local progress (0-1) for a given section */
 function useSectionVisibility(sectionKey: SectionKey): boolean {
   const [visible, setVisible] = useState(false);
+  const { activeBikePart } = usePortfolio();
 
   const update = useCallback(() => {
     const p = getProgress();
@@ -37,7 +38,7 @@ function useSectionVisibility(sectionKey: SectionKey): boolean {
     return subscribe(update);
   }, [update]);
 
-  return visible;
+  return activeBikePart ? false : visible;
 }
 
 // PROJECTS CONFIG
