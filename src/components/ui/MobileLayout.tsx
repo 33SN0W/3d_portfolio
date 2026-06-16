@@ -12,49 +12,53 @@ const POSTER_DATA: Record<PosterKey, {
 }> = {
   journey: {
     title: "SYSTEMS ENGINEERING PATHWAY // CAREER JOURNEY",
-    subtitle: "Prateek // IIIT Guwahati CS (Graduated 2025)",
+    subtitle: "Prateek // Systems Strategy & Data Ingestion",
     sections: [
       {
-        label: "2021 — CS INCEPTION",
-        value: "Entered IIIT Guwahati. Developed core systems concepts: pointer manipulation, thread safety, process trees, and cache-aligned layouts in C/C++."
+        label: "2021 — CS INCEPTION (IIIT GUWAHATI)",
+        value: "B.Tech CSE entry. Developed core systems concepts: pointer manipulation, thread safety, process trees, and cache-aligned memory layouts in C++."
       },
       {
         label: "2023 — SCALING PREDICTIONS (YOUTUBE AD RECOMMENDER)",
-        value: "Engineered high-concurrency scraping scripts for YouTube ad metrics. Built TF-IDF vectorizers and Support Vector Machine classifiers, optimizing video recommendation accuracy to 87%."
+        value: "Engineered NLP text preprocessing and lemmatization pipelines. Built TF-IDF and SVM classifiers to achieve 98% accuracy on video recommendation."
       },
       {
-        label: "2024 — CROSS-PLATFORM MOBILE DIAGNOSTICS (HEALTH APP)",
-        value: "Created a React Native client backed by a Flask machine learning inference server. Integrated medical symptom matching engines and low-latency chart plotting."
+        label: "2024 — ARCHITECTURE & CORE OPTIMIZATION",
+        value: "Designed hybrid memory-aware cache policies over LRU (ChampSim), improving LLC hit rates by 5%. Built academic research discovery engines using sentence-transformers."
       },
       {
-        label: "2025 — CLOUD SYSTEM AUTOMATION (MAQ SOFTWARE)",
-        value: "Automated large-scale Spark ETL processing pipelines. Built Microsoft Fabric data warehouses, Synapse workspaces, and robust multi-stage CI/CD pipelines in Azure DevOps. Certified DP-600 Synapse Analytics Engineer."
+        label: "2025 - 2026 — CLOUD TELESCOPING & BIG DATA (MAQ SOFTWARE)",
+        value: "Software Engineer 1. Built PySpark ingestion pipelines handling 200M+ rows/day. Reduced runtime execution from 12h to 3h. Certified DP-600 and DP-700."
+      },
+      {
+        label: "2026 - 2028 — STRATEGIC MANAGEMENT (IIM MUMBAI)",
+        value: "MBA Core. Blending deep computational expertise with systems operations, supply chain strategy, and decision models."
       }
     ]
   },
   resume: {
     title: "ENGINEERING SPEC SHEET // RESUME SUMMARY",
-    subtitle: "Prateek // Software Engineer & Data Architect",
+    subtitle: "Prateek // Software Engineer & Systems Strategist",
     sections: [
       {
-        label: "PROPULSION SYSTEM (BACKEND & PIPELINES)",
-        value: "PySpark, Python, Go, SQL, KQL, REST APIs, parallel ingestion pipelines."
+        label: "PROPULSION SYSTEM (LANGUAGES & DATA)",
+        value: "C++, C#, Java, Python, SQL, KQL, PySpark, Data Warehousing, ETL Pipelines."
       },
       {
-        label: "CHASSIS & INSTRUMENTATION (FRONTEND)",
-        value: "React, React Native, TypeScript, Tailwind CSS, Framer Motion, HTML5/Canvas."
+        label: "CHASSIS & INSTRUMENTATION (FULL STACK)",
+        value: "Next.js, React, React Native, Node.js, Flask, TypeScript, HTML/CSS, .NET."
       },
       {
-        label: "AERODYNAMICS (CLOUD INFRASTRUCTURE)",
-        value: "Microsoft Fabric, Azure Synapse Analytics, Azure DevOps CI/CD, AWS, Docker."
+        label: "AERODYNAMICS (CLOUD & DEVOPS)",
+        value: "Microsoft Fabric, Azure Synapse, Azure Data Factory, ADLS, Azure DevOps, CI/CD, Docker."
       },
       {
         label: "WORK EXPERIENCE",
-        value: "Software Engineer 1 @ MAQ Software (2025 - Present) // Associate Software Engineer @ MAQ Software (Jan - Jul 2025)"
+        value: "Software Engineer 1 (Associate SE -> SE 1) @ MAQ Software (Jan 2025 - May 2026) // Noida, India"
       },
       {
         label: "EDUCATION & CERTIFICATION",
-        value: "B.Tech in Computer Science @ IIIT Guwahati (2021 - 2025) // DP-600 Microsoft Certified Fabric Analytics Engineer"
+        value: "MBA Core @ IIM Mumbai (2026 - 2028) // B.Tech CSE @ IIIT Guwahati (2021 - 2025) // Certified DP-600 & DP-700"
       }
     ]
   },
@@ -71,8 +75,8 @@ const POSTER_DATA: Record<PosterKey, {
         value: "Molded honeycomb carbon-fiber composite. Pull-rod front suspension, push-rod rear suspension. Advanced high-rake ground effect venturi tunnels."
       },
       {
-        label: "NARRATIVE ALIGNMENT",
-        value: "Symbolizes physical optimization under structural regulations. Translating computational CFD parameters into pure kinetic force transfer."
+        label: "HYBRID CACHE POLICY ALIGNMENT",
+        value: "Selected as the architectural blueprint for the Hybrid Memory-Aware Cache Policy. Translating complex power recovery parameters into high-efficiency memory access recency and eviction algorithms."
       }
     ]
   },
@@ -89,8 +93,8 @@ const POSTER_DATA: Record<PosterKey, {
         value: "Triangulated chromoly steel trellis frame. WP pressurized forks, aluminum swingarm. Kinematic link rear damper."
       },
       {
-        label: "NARRATIVE ALIGNMENT",
-        value: "Prateek's personal garage machine. A tangible, structural study of space-frame load paths and mechanical power density."
+        label: "ACADEMIC RECOMMENDATION ALIGNMENT",
+        value: "Selected as the blueprint for the NLP Research Recommendation engine. High-speed, multi-dimensional semantic retrieval resembling the pneumatic control valves of a V4 power unit."
       }
     ]
   },
@@ -125,8 +129,8 @@ const POSTER_DATA: Record<PosterKey, {
         value: "Lotus 99T powered by the Honda RA167E V6 Twin-Turbo (~1000 HP). Senna secured victories at Monaco and Detroit, demonstrating superior mechanical grip on bumpy street tracks."
       },
       {
-        label: "NARRATIVE ALIGNMENT",
-        value: "Represents the seamless integration of software and hardware control theory. Active adaptation to dynamic environments to maximize computational speed and grip."
+        label: "YOUTUBE RECOMMENDER ALIGNMENT",
+        value: "Selected as the blueprint for the YouTube Ad Recommender. Active optimization and NLP feature engineering to adapt to dynamic textual conditions under CPU latency bounds."
       }
     ]
   }
@@ -157,7 +161,7 @@ export default function MobileLayout() {
       const mins = Math.floor(totalMs / 60000);
       const secs = Math.floor((totalMs % 60000) / 1000);
       const ms = totalMs % 1000;
-      
+
       if (lapTimeRef.current) {
         lapTimeRef.current.innerText = `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}.${String(ms).padStart(3, "0")}`;
       }
@@ -214,16 +218,16 @@ export default function MobileLayout() {
   }, [focusedPoster]);
 
   const skills = [
-    { cat: "PROPULSION (Backend)", items: [{ name: "PySpark", color: "#d100d1" }, { name: "Python", color: "#d100d1" }, { name: "Go", color: "#00d100" }, { name: "SQL", color: "#00d100" }, { name: "KQL", color: "#00d100" }] },
-    { cat: "CHASSIS (Frontend)", items: [{ name: "React", color: "#00d100" }, { name: "React Native", color: "#00d100" }, { name: "TypeScript", color: "#00d100" }, { name: "Tailwind CSS", color: "#00d100" }] },
-    { cat: "AERODYNAMICS (Cloud)", items: [{ name: "Microsoft Fabric", color: "#d100d1" }, { name: "Azure Synapse", color: "#d100d1" }, { name: "AWS", color: "#ffff00" }] },
-    { cat: "TELEMETRY (Automation)", items: [{ name: "CI/CD Devops", color: "#d100d1" }, { name: "Git", color: "#00d100" }, { name: "Docker", color: "#ffff00" }] }
+    { cat: "PROPULSION (Data & Systems)", items: [{ name: "PySpark", color: "#d100d1" }, { name: "Python", color: "#d100d1" }, { name: "SQL", color: "#d100d1" }, { name: "C++", color: "#00d100" }, { name: "KQL", color: "#00d100" }, { name: "Data Warehousing", color: "#00d100" }] },
+    { cat: "CHASSIS (Full Stack & UX)", items: [{ name: "Next.js", color: "#d100d1" }, { name: "React", color: "#00d100" }, { name: "React Native", color: "#00d100" }, { name: "TypeScript", color: "#00d100" }, { name: "Flask", color: "#00d100" }, { name: "HTML/CSS", color: "#00d100" }, { name: ".NET", color: "#ffff00" }] },
+    { cat: "AERODYNAMICS (Cloud Platforms)", items: [{ name: "Microsoft Fabric", color: "#d100d1" }, { name: "Azure Synapse", color: "#d100d1" }, { name: "Azure DevOps", color: "#d100d1" }, { name: "CI/CD", color: "#d100d1" }, { name: "Azure Data Factory", color: "#00d100" }, { name: "ADLS", color: "#00d100" }] },
+    { cat: "TELEMETRY (Developer Tools & Sim)", items: [{ name: "Git / GitHub", color: "#00d100" }, { name: "Docker", color: "#00d100" }, { name: "Unity", color: "#ffff00" }, { name: "JIRA", color: "#ffff00" }] }
   ];
 
   const timeline = [
-    { station: "STATION 01", role: "Software Engineer I", location: "MAQ SOFTWARE // SYSTEMS & DATA ARCHITECTURE", date: "2025 - PRESENT", details: "Architecting enterprise PySpark ETL cloud pipelines and data warehouses in Microsoft Fabric. Streamlining big data ingestion architectures, managing workload cluster optimizations, and automating Synapse DevOps deployments." },
-    { station: "STATION 02", role: "Associate Software Engineer", location: "MAQ SOFTWARE // ANALYTICS DEPLOYMENT LAYER", date: "JAN - JUL 2025", details: "Orchestrated CI/CD release engineering and infrastructure orchestration. Configured automated telemetry pipelines and centralized analytics logging layers for system stress analysis." },
-    { station: "STATION 03", role: "CS Academic Core", location: "IIIT GUWAHATI // CORE SYSTEMS COMPUTATION", date: "2021 - 2025", details: "Rigorous academic focus in systems programming, compiler engineering, distributed ledger databases, memory layout optimization, and algorithmic structures." }
+    { station: "STATION 01", role: "MBA Candidate", location: "IIM MUMBAI /", date: "2026 - 2028", details: "Focusing on operations management, supply chain strategy, decision sciences, systems modeling, and strategic sourcing." },
+    { station: "STATION 02", role: "Software Engineer 1 (Associate SE -> SE 1)", location: "MAQ SOFTWARE // SYSTEMS & BIG DATA PLATFORMS", date: "JAN 2025 - MAY 2026", details: "Owned production data pipelines for Microsoft Azure Core Business Insights, processing 200M+ rows daily. Cut ETL runtimes from 12 hours to 3 hours (75% optimization). Modernized ingestion framework, replacing 300+ legacy pipelines." },
+    { station: "STATION 03", role: "CS Academic Core", location: "IIIT GUWAHATI // CORE SYSTEMS COMPUTATION", date: "2021 - 2025", details: "Rigorous academic focus in CSE. Designed hybrid cache eviction simulator architectures, developed deep learning multi-label literature classification models, and studied distributed systems." }
   ];
 
   const posterMetadataList = [
@@ -624,7 +628,7 @@ export default function MobileLayout() {
 
         <div>
           <a
-            href="/resume.pdf"
+            href="/Prateek_resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -687,7 +691,7 @@ export default function MobileLayout() {
                 {POSTER_DATA[focusedPoster].subtitle}
               </div>
               <div style={{ color: "var(--orange)", fontFamily: "var(--font-mono)", fontSize: "8px", marginTop: "6px" }}>
-                TELEMETRY SCANNING: {Math.round(animateProgress)}% [{ "█".repeat(Math.floor(animateProgress / 10)).padEnd(10, "░") }]
+                TELEMETRY SCANNING: {Math.round(animateProgress)}% [{"█".repeat(Math.floor(animateProgress / 10)).padEnd(10, "░")}]
               </div>
             </div>
 
@@ -704,6 +708,25 @@ export default function MobileLayout() {
                 </div>
               ))}
             </div>
+
+            {/* Modal Links if present */}
+            {focusedPoster === "ferrari" && (
+              <div style={{ display: "flex", gap: "12px", marginTop: "6px", borderTop: "1px dashed #222", paddingTop: "10px", fontFamily: "var(--font-mono)", fontSize: "9.5px" }}>
+                <a href="https://github.com/33SN0W/champsim" target="_blank" rel="noopener noreferrer" style={{ color: "var(--orange)", textDecoration: "none" }}>[GITHUB ↗]</a>
+                <a href="https://raw.githubusercontent.com/33SN0W/champsim/main/endsem_presentation_prateek.pdf" target="_blank" rel="noopener noreferrer" style={{ color: "var(--orange)", textDecoration: "none" }}>[PRESENTATION DECK ↗]</a>
+              </div>
+            )}
+            {focusedPoster === "ktm" && (
+              <div style={{ display: "flex", gap: "12px", marginTop: "6px", borderTop: "1px dashed #222", paddingTop: "10px", fontFamily: "var(--font-mono)", fontSize: "9.5px" }}>
+                <a href="https://github.com/33SN0W/nlp_project" target="_blank" rel="noopener noreferrer" style={{ color: "var(--orange)", textDecoration: "none" }}>[GITHUB ↗]</a>
+                <a href="https://raw.githubusercontent.com/33SN0W/nlp_project/main/Research%20Literature%20Recommendation%20System%20and%20Academic%20Domain%20Predictor.pdf" target="_blank" rel="noopener noreferrer" style={{ color: "var(--orange)", textDecoration: "none" }}>[PRESENTATION DECK ↗]</a>
+              </div>
+            )}
+            {focusedPoster === "senna2" && (
+              <div style={{ display: "flex", gap: "12px", marginTop: "6px", borderTop: "1px dashed #222", paddingTop: "10px", fontFamily: "var(--font-mono)", fontSize: "9.5px" }}>
+                <a href="https://github.com/33SN0W/ad_reccomd" target="_blank" rel="noopener noreferrer" style={{ color: "var(--orange)", textDecoration: "none" }}>[GITHUB ↗]</a>
+              </div>
+            )}
 
             {/* Close Button */}
             <div style={{ display: "flex", justifyContent: "flex-end", borderTop: "1px solid #222", paddingTop: "10px" }}>

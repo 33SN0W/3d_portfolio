@@ -109,7 +109,7 @@ function useNotebookTexture(mounted: boolean) {
     // Sketching lines representing schematics (Left page)
     ctx.strokeStyle = "rgba(26, 20, 16, 0.35)"; // Pencil graphite color
     ctx.lineWidth = 1.5;
-    
+
     // Draw some geometric diagrams on left page
     ctx.beginPath();
     ctx.arc(120, 150, 45, 0, Math.PI * 2);
@@ -128,13 +128,13 @@ function useNotebookTexture(mounted: boolean) {
     ctx.font = "italic 16px cursive, sans-serif";
     ctx.fillStyle = "rgba(26, 20, 16, 0.6)";
     const lines = [
-      "trellis stress loads",
-      "nodes = 6061 aluminum",
-      "spring tension: 85N/mm",
-      "PBR material index:",
-      " concrete roughness = 0.82",
-      " anodized = 1.0 metalness",
-      "11:47 PM - block 6 is ready",
+      "ChampSim cache policy",
+      "LRU vs NVM writebacks",
+      "NLP academic domain models",
+      "TF-IDF multi-label loss",
+      "LLC hit rate: +5% achieved",
+      "DP-600 & DP-700 data logs",
+      "11:47 PM - cache simulation running",
     ];
     lines.forEach((line, index) => {
       ctx.fillText(line, 290, 80 + index * 30);
@@ -210,11 +210,11 @@ function useBlueprintTexture(isResume: boolean, mounted: boolean) {
       ctx.stroke();
 
       const exp = [
-        { title: "Software Engineer 1", company: "MAQ Software", period: "2025 - Present", desc: "" },
-        { title: "Associate Software Engineer", company: "MAQ Software", period: "Jan - Jul 2025", desc: "" },
-        { title: "", company: "", period: "", desc: "- Developed ETL workflows using PySpark, SQL, and KQL." },
-        { title: "", company: "", period: "", desc: "- Automated CI/CD pipelines for Synapse Fabric notebooks." },
-        { title: "", company: "", period: "", desc: "- Managed and analyzed Microsoft Virtual Machine data." },
+        { title: "Software Engineer 1 // Associate SE", company: "MAQ Software", period: "2025 - 2026", desc: "" },
+        { title: "", company: "", period: "", desc: "- Owned production ETL pipelines processing 200M+ rows/day." },
+        { title: "", company: "", period: "", desc: "- Cut telemetry workflow runtimes from 12h to 3h (75%)." },
+        { title: "", company: "", period: "", desc: "- Modernized ingestion structures, replacing 300+ pipelines." },
+        { title: "", company: "", period: "", desc: "- Reduced daily incident counts by 70% via validation." },
       ];
       exp.forEach((line, idx) => {
         ctx.fillStyle = line.title ? "#f2f2f2" : "#a4a4a4";
@@ -232,9 +232,9 @@ function useBlueprintTexture(isResume: boolean, mounted: boolean) {
       ctx.stroke();
 
       const projs = [
-        { name: "YouTube Ad Recommender", tech: "Python / NLTK / Scikit-Learn" },
-        { name: "Health App (Disease Prediction)", tech: "React Native / Flask / ML" },
-        { name: "Microsoft Fabric DP-600 certified", tech: "Synapse Analytics Engineer" },
+        { name: "YouTube Ad Recommender", tech: "Python / TF-IDF / Scikit-Learn" },
+        { name: "Hybrid Memory Cache Design", tech: "C++ / ChampSim / Simulator" },
+        { name: "Academic Domain Predictor", tech: "TensorFlow / sentence-transformers" },
       ];
       projs.forEach((p, idx) => {
         ctx.fillStyle = "#f2f2f2";
@@ -256,9 +256,10 @@ function useBlueprintTexture(isResume: boolean, mounted: boolean) {
 
       ctx.fillStyle = "#f2f2f2";
       ctx.font = "18px monospace";
-      ctx.fillText("IIIT Guwahati — Bachelor of Technology in CS", 80, 800);
+      ctx.fillText("IIM Mumbai — MBA Core // Systems & Strategy (2026-28)", 80, 800);
+      ctx.fillText("IIIT Guwahati — B.Tech CS & Engineering (2021-25)", 80, 830);
       ctx.fillStyle = "#a4a4a4";
-      ctx.fillText("Graduated: June 2025 // Kullu Science School (2021)", 80, 825);
+      ctx.fillText("DP-600 & DP-700 Microsoft Certified Associate", 80, 860);
     } else {
       // Journey Content
       ctx.fillStyle = "#f2f2f2";
@@ -278,10 +279,11 @@ function useBlueprintTexture(isResume: boolean, mounted: boolean) {
       ctx.stroke();
 
       const milestones = [
-        { year: "2021", title: "Computer Science Inception", desc: "Entered IIIT Guwahati. First C programs and core system algorithms." },
-        { year: "2023", title: "NLP & Machine Learning", desc: "Built YouTube Ad Recommender. Classification model accuracy study." },
-        { year: "2024", title: "Full-Stack Diagnostics", desc: "Developed Health App. Integrated symptom inference engine and chat." },
-        { year: "2025", title: "Enterprise Systems", desc: "Joined MAQ Software. Software Engineer 1. Microsoft Fabric certified." },
+        { year: "2021", title: "Computer Science Inception", desc: "Entered IIIT Guwahati. Systems programming, C++ and memory safety." },
+        { year: "2023", title: "YouTube Ad Recommender", desc: "Engineered NLP text preprocessing and SVM classifiers (98% accuracy)." },
+        { year: "2024", title: "Cache Optimization & NLP", desc: "Designed hybrid cache policies (ChampSim) & paper retrieval models." },
+        { year: "2025-26", title: "Enterprise Telemetry Systems", desc: "Joined MAQ Software. Promoted to SE 1. Handled 200M+ rows daily." },
+        { year: "2026", title: "IIM Mumbai Strategy Stop", desc: "Entering MBA Core, bridging computation with operations and strategy." },
       ];
 
       milestones.forEach((m, idx) => {
@@ -464,9 +466,9 @@ function ShoeiHelmet({ position, rotation, scale = 1 }: { position: [number, num
   }, []);
 
   return (
-    <group 
-      position={position} 
-      rotation={rotation} 
+    <group
+      position={position}
+      rotation={rotation}
       scale={scale}
       onClick={(e) => {
         e.stopPropagation();
@@ -488,22 +490,22 @@ function ShoeiHelmet({ position, rotation, scale = 1 }: { position: [number, num
           <sphereGeometry args={[0.065, 32, 32, 0, Math.PI * 2, 0, Math.PI * 0.72]} />
           <primitive object={shellMat} attach="material" />
         </mesh>
-        
+
         {/* Sleek cohesive chin bar - cylinder segment following sphere curvature */}
         <mesh castShadow position={[0, -0.026, 0.018]} rotation={[0.16, 0, 0]} material={shellMat}>
           <cylinderGeometry args={[0.064, 0.062, 0.038, 24, 1, true, -Math.PI / 2.3, Math.PI / 1.15]} />
         </mesh>
-        
+
         {/* Base rubber neck trim roll */}
         <mesh position={[0, -0.048, -0.01]} rotation={[0.08, 0, 0]} material={blackTrimMat}>
           <torusGeometry args={[0.058, 0.006, 8, 24]} />
         </mesh>
-        
+
         {/* Chin splitter aerodynamic winglet */}
         <mesh position={[0, -0.045, 0.04]} rotation={[0.1, 0, 0]} material={blackTrimMat}>
           <cylinderGeometry args={[0.063, 0.063, 0.006, 16, 1, true, -Math.PI / 3, Math.PI / 1.5]} />
         </mesh>
-        
+
         {/* Black chin vent intake */}
         <mesh position={[0, -0.024, 0.075]} material={blackTrimMat}>
           <boxGeometry args={[0.016, 0.014, 0.005]} />
@@ -518,7 +520,7 @@ function ShoeiHelmet({ position, rotation, scale = 1 }: { position: [number, num
         <mesh position={[0, 0.008, 0.038]} rotation={[0.2, 0, 0]} material={visorMat}>
           <cylinderGeometry args={[0.061, 0.061, 0.032, 24, 1, true, -Math.PI / 2.8, Math.PI / 1.4]} />
         </mesh>
-        
+
         {/* Visor lift tab (bottom-left) */}
         <mesh position={[0.035, -0.01, 0.052]} rotation={[0.2, 0.4, 0.1]} material={blackTrimMat}>
           <boxGeometry args={[0.008, 0.004, 0.004]} />
@@ -531,7 +533,7 @@ function ShoeiHelmet({ position, rotation, scale = 1 }: { position: [number, num
         <mesh position={[-0.061, 0.008, 0]} rotation={[0, Math.PI / 2, 0]} material={blackTrimMat}>
           <cylinderGeometry args={[0.008, 0.008, 0.005, 12]} />
         </mesh>
-        
+
         {/* Pivot plates metallic details */}
         <mesh position={[0.063, 0.008, 0]} rotation={[0, Math.PI / 2, 0]}>
           <cylinderGeometry args={[0.004, 0.004, 0.003, 12]} />
@@ -557,7 +559,7 @@ function ShoeiHelmet({ position, rotation, scale = 1 }: { position: [number, num
         <mesh position={[0, 0.022, -0.06]} rotation={[-0.3, 0, 0]} material={orangeDecalMat}>
           <boxGeometry args={[0.048, 0.008, 0.02]} />
         </mesh>
-        
+
         {/* Decals: High speed side livery lines */}
         <mesh position={[0.032, 0.022, 0.022]} rotation={[0.2, 0.4, 0.3]} material={orangeDecalMat}>
           <boxGeometry args={[0.008, 0.0015, 0.07]} />
@@ -576,22 +578,22 @@ function ShoeiHelmet({ position, rotation, scale = 1 }: { position: [number, num
 }
 
 // ─── FRAMED GALLERY POSTER ──────────────────────────────
-function FramedPoster({ 
-  position, 
-  rotation, 
-  args, 
-  material, 
-  onClick, 
-  onPointerOver, 
+function FramedPoster({
+  position,
+  rotation,
+  args,
+  material,
+  onClick,
+  onPointerOver,
   onPointerOut,
   steelMat,
   frameMat,
   paperColor = "#f4f0ea"
-}: { 
-  position: [number, number, number]; 
-  rotation: [number, number, number]; 
-  args: [number, number]; 
-  material: THREE.Material; 
+}: {
+  position: [number, number, number];
+  rotation: [number, number, number];
+  args: [number, number];
+  material: THREE.Material;
   onClick: (e: any) => void;
   onPointerOver: (e: any) => void;
   onPointerOut: (e: any) => void;
@@ -623,7 +625,7 @@ function FramedPoster({
         <planeGeometry args={[w, h]} />
         <meshBasicMaterial color={paperColor} />
       </mesh>
-      
+
       {/* Poster Page print */}
       <mesh position={[0, 0, 0.008]} material={material} onClick={onClick} onPointerOver={onPointerOver} onPointerOut={onPointerOut}>
         <planeGeometry args={[w, h]} />
@@ -635,8 +637,8 @@ function FramedPoster({
       </mesh>
 
       {/* Corner mounting metal studs */}
-      {[-w/2 - border/2, w/2 + border/2].map((x, xi) => 
-        [-h/2 - border/2, h/2 + border/2].map((y, yi) => (
+      {[-w / 2 - border / 2, w / 2 + border / 2].map((x, xi) =>
+        [-h / 2 - border / 2, h / 2 + border / 2].map((y, yi) => (
           <mesh key={`${xi}-${yi}`} position={[x, y, 0.008]} rotation={[Math.PI / 2, 0, 0]} material={steelMat}>
             <cylinderGeometry args={[0.004, 0.004, 0.016, 8]} />
           </mesh>
@@ -650,47 +652,47 @@ function FramedPoster({
 const PROJECTS = [
   {
     name: "YouTube Ad Recommender",
-    tech: "Python // NLTK // Scikit-Learn",
-    desc: "SVM video category classifier trained on 3,000+ ads to optimize target recommendations.",
-    overview: "A highly parallelized text classification system designed to scrape, clean, and categorize YouTube advertisements to maximize click-through optimization.",
-    constraints: "High sparsity in meta text labels, strictly low-latency inference limits for real-time recommendation engines.",
-    solution: "Engineered robust TF-IDF feature pipelines and utilized localized Support Vector Machines, yielding 87% accuracy with sub-10ms latency.",
-    decisions: "Chose SVM over transformer models to minimize computational cost on standard CPU nodes, maximizing operational yield.",
-    impact: "Boosted recommendation precision metrics by 14% and cut cold-start classification latency by 35%.",
+    tech: "Python // TF-IDF // Scikit-Learn",
+    desc: "SVM video category classifier trained on 3,500+ videos to optimize recommendations.",
+    overview: "A machine learning pipeline to recommend ads by classifying YouTube videos using unigram/bigram textual features.",
+    constraints: "High metadata label noise, strict real-time classification latency constraints on CPU nodes.",
+    solution: "Engineered TF-IDF unigram and bigram features and trained Support Vector Machine classifiers.",
+    decisions: "Selected traditional SVM over heavy Transformer models, sacrificing minimal accuracy for 8x faster CPU speeds.",
+    impact: "Achieved 97% Naive Bayes and 98% SVM classification accuracy on evaluation datasets.",
     details: [
-      "Built custom scraping pipelines for YouTube ad metadata.",
-      "Engineered text classification features using TF-IDF and NLTK.",
-      "Achieved 87% classifier accuracy with Support Vector Machines."
+      "Built machine learning pipelines to classify video metadata.",
+      "Engineered text features through lemmatization and TF-IDF.",
+      "Achieved 98% accuracy on SVM recommendation classifiers."
     ]
   },
   {
-    name: "Health App & Diagnostics",
-    tech: "React Native // Flask // ML",
-    desc: "Mobile health companion with automatic symptom inference and LLM chatbot diagnostics.",
-    overview: "A secure, cross-platform mobile application utilizing natural language processing to triage patient symptoms offline.",
-    constraints: "Absolute patient data privacy (HIPAA compliance), zero network coverage fallback operation.",
-    solution: "Built a localized SQLite encrypted logging database paired with a Flask REST API symptom parsing engine.",
-    decisions: "Selected an lightweight local inference architecture on device rather than continuous cloud pinging to guarantee user privacy.",
-    impact: "Zero data leaks recorded, and achieved sub-50ms local diagnostic response times.",
+    name: "Hybrid Memory Cache Design",
+    tech: "C++ // ChampSim // Memory Systems",
+    desc: "Frequency-aware and channel-aware cache eviction strategies over LRU on ChampSim.",
+    overview: "Memory-aware cache replacement policies designed for hybrid DRAM/NVM architectures to reduce writebacks.",
+    constraints: "Must run within standard simulator guidelines and optimize instructions-per-cycle (IPC).",
+    solution: "Developed frequency-aware and channel-aware eviction strategies incorporating recency and locality.",
+    decisions: "Implemented P1 and P2 custom victim selection prioritizations to trade off cycle cost for NVM life.",
+    impact: "Reduced writebacks and boosted LLC hit rate by up to 5% under selected traces.",
     details: [
-      "Developed cross-platform mobile client in React Native.",
-      "Built Flask REST API for low-latency ML inferences.",
-      "Integrated secure health logging and clinical metric charts."
+      "Designed cache replacement policies over baseline LRU.",
+      "Developed frequency/channel eviction algorithms in C++.",
+      "Evaluated policies on 4-channel architectures in ChampSim."
     ]
   },
   {
-    name: "Microsoft Fabric Workflows",
-    tech: "Synapse // PySpark // CI-CD",
-    desc: "Enterprise data engineering pipelines, DP-600 certified warehouse deployment.",
-    overview: "Big data extraction, transformation, and loading pipelines managing transaction telemetry streams for Microsoft VM workloads.",
-    constraints: "Extremely fragmented source structures, high daily scale (200M+ transaction rows).",
-    solution: "Architected Synapse pipelines with partitioned delta lakes and automated DevOps release infrastructure.",
-    decisions: "Utilized Fabric direct-lake semantic modeling to enable real-time Power BI reporting without import refreshes.",
-    impact: "Cut database ingestion cycles by 40% and improved ETL processing efficiency.",
+    name: "Academic Domain Predictor",
+    tech: "TensorFlow // sentence-transformers // NLP",
+    desc: "Semantic paper recommendation and multi-label academic classification platform.",
+    overview: "An NLP-powered research discovery platform combining semantic similarity matching with neural network domain tagging.",
+    constraints: "High dimensionality of scientific text and overlapping domain boundaries.",
+    solution: "Developed TensorFlow deep neural networks and implemented semantic search query layers.",
+    decisions: "Used sentence-transformer embeddings (all-MiniLM-L6-v2) for lightweight and rapid cosine similarity scores.",
+    impact: "Reached 99.4% categorical classification accuracy and instant recommendation retrieval.",
     details: [
-      "Automated deployment pipelines using Azure DevOps.",
-      "Optimized Synapse Spark notebooks for large scale ETL.",
-      "Built scalable semantic models for Power BI integration."
+      "Built TensorFlow classifiers with 99.4% accuracy.",
+      "Mapped paper metadata to multi-label academic domains.",
+      "Implemented semantic retrieval via cosine similarity."
     ]
   }
 ];
@@ -736,7 +738,7 @@ function LaptopIdleScreen({ livery, setIsLaptopActive }: LaptopIdleScreenProps) 
         setCurrentLine("");
         lineIdx = (lineIdx + 1) % allLines.length;
         charIdx = 0;
-        
+
         // Clear terminal if full
         if (lineIdx === 0) {
           setTimeout(() => {
@@ -758,7 +760,7 @@ function LaptopIdleScreen({ livery, setIsLaptopActive }: LaptopIdleScreenProps) 
   }, [allLines]);
 
   return (
-    <div 
+    <div
       onClick={() => setIsLaptopActive(true)}
       style={{
         width: "100%",
@@ -890,7 +892,7 @@ function Laptop({ position, rotation }: LaptopProps) {
         <mesh position={[0, 0.115, -0.0062]} rotation={[Math.PI / 2, 0, 0]} material={chromeMat}>
           <cylinderGeometry args={[0.015, 0.015, 0.001, 16]} />
         </mesh>
-        
+
         {/* Screen inner black bezel display border */}
         <mesh position={[0, 0.115, 0.001]} material={blackPlasticMat}>
           <boxGeometry args={[0.34, 0.23, 0.002]} />
@@ -900,7 +902,7 @@ function Laptop({ position, rotation }: LaptopProps) {
         <mesh position={[0, 0.224, 0.0022]} material={blackPlasticMat}>
           <boxGeometry args={[0.052, 0.01, 0.001]} />
         </mesh>
-        
+
         <Html
           transform
           position={[0, 0.115, 0.0024]}
@@ -1061,8 +1063,8 @@ function Notebook({ position, rotation }: { position: [number, number, number]; 
   }, [pageTex]);
 
   return (
-    <group 
-      position={position} 
+    <group
+      position={position}
       rotation={rotation}
       onClick={(e) => {
         e.stopPropagation();
@@ -1173,7 +1175,7 @@ function CoffeeMug({ position }: { position: [number, number, number] }) {
   }, []);
 
   return (
-    <group 
+    <group
       position={position}
       onClick={(e) => {
         e.stopPropagation();

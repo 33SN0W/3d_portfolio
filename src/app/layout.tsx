@@ -8,10 +8,14 @@ export const metadata: Metadata = {
   keywords: [
     "Prateek",
     "Software Engineer",
-    "Data Architect",
+    "Data Engineer",
+    "Systems Strategist",
     "Azure",
     "Microsoft Fabric",
-    "Power BI",
+    "ChampSim",
+    "Cache Replacement Design",
+    "TensorFlow",
+    "NLP",
     "Portfolio",
   ],
   openGraph: {

@@ -12,6 +12,8 @@ interface PortfolioContextProps {
   setActiveProjectIndex: (index: number) => void;
   focusedPoster: string | null;
   setFocusedPoster: (val: string | null) => void;
+  focusedProjectIndex: number | null;
+  setFocusedProjectIndex: (val: number | null) => void;
   livery: LiveryType;
   setLivery: (val: LiveryType) => void;
   activeBikePart: 'frame' | 'engine' | 'suspension' | 'rear_section' | 'electrical' | null;
@@ -103,6 +105,7 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
   const [isLaptopActive, setIsLaptopActive] = useState(false);
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const [focusedPoster, setFocusedPoster] = useState<string | null>(null);
+  const [focusedProjectIndex, setFocusedProjectIndex] = useState<number | null>(null);
   const [livery, setLivery] = useState<LiveryType>("ferrari");
   const [activeBikePart, setActiveBikePart] = useState<'frame' | 'engine' | 'suspension' | 'rear_section' | 'electrical' | null>(null);
   const [isMuted, setIsMuted] = useState(false);
@@ -154,14 +157,15 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
     return subscribe(handleScrollUpdate);
   }, []);
 
-  // Exit poster focus on scrolling or clicking elsewhere
+  // Exit focus on scrolling or clicking elsewhere
   useEffect(() => {
     const handleScroll = () => {
       if (focusedPoster) setFocusedPoster(null);
+      if (focusedProjectIndex !== null) setFocusedProjectIndex(null);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [focusedPoster]);
+  }, [focusedPoster, focusedProjectIndex]);
 
   return (
     <PortfolioContext.Provider
@@ -173,6 +177,8 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
         setActiveProjectIndex,
         focusedPoster,
         setFocusedPoster,
+        focusedProjectIndex,
+        setFocusedProjectIndex,
         livery,
         setLivery,
         activeBikePart,

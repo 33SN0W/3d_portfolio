@@ -46,38 +46,44 @@ const PROJECTS_DATA = [
   {
     id: "senna2", // Maps to active suspension poster
     name: "YouTube Ad Recommender",
-    tech: "Python // NLTK // Scikit-Learn",
-    desc: "SVM video category classifier trained on 3,000+ ads to optimize target recommendations.",
-    problem: "Poor recommendation precision due to highly sparse video metadata labels.",
-    constraints: "Strict sub-15ms real-time inference latency constraints on standard CPU nodes.",
-    tradeoffs: "Selected traditional SVM over heavy Transformer models, sacrificing 2% accuracy for 8x faster CPU speeds.",
-    architecture: "Multi-threaded text pre-processors feeding parallelized TF-IDF feature pipelines.",
-    scale: "Trained on 3,000+ custom-scraped ad segments.",
-    impact: "+14% precision uptick, and 35% latency reduction."
+    tech: "Python // TF-IDF // Scikit-Learn",
+    desc: "SVM video category classifier trained on 3,500+ videos and 6,600+ ad records to optimize recommendations.",
+    problem: "Low matching precision due to sparse video metadata and high label noise.",
+    constraints: "Required classification accuracy above 95% using high-density unigram/bigram textual features.",
+    tradeoffs: "Selected SVM over deep transformer models to reduce computation cost and latency on CPU nodes.",
+    architecture: "Lemmatization and NLP pre-processing pipelines feeding trained SVM and Naive Bayes classifiers.",
+    scale: "Categorized 3,500+ videos and 6,600+ custom-scraped advertisement segments.",
+    impact: "Achieved 97% Naive Bayes and 98% SVM accuracy on validation sets.",
+    github: "https://github.com/33SN0W/ad_reccomd",
+    deck: ""
   },
   {
     id: "ferrari", // Maps to SF-24 engine poster
-    name: "Health App & Diagnostics",
-    tech: "React Native // Flask // ML",
-    desc: "Mobile health companion with automatic symptom inference and offline triage diagnostics.",
-    problem: "Unreliable network coverage causing sync delays during critical diagnostic triages.",
-    constraints: "Absolute patient privacy (zero cloud logging of sensitive data) and zero-network fallback.",
-    tradeoffs: "Leveraged device-local SQLite storage and optimized model parameters to fit mobile constraints.",
-    architecture: "React Native client communicating with a localized Flask symptom parser.",
-    scale: "Triages 45+ standard symptom groupings with sub-50ms offline response times.",
-    impact: "Zero leak logs recorded, HIPAA compliance verified."
+    name: "Hybrid Memory Cache Design",
+    tech: "C++ // ChampSim // Memory Systems",
+    desc: "Frequency-aware and channel-aware cache eviction strategies over baseline LRU for DRAM/NVM architectures.",
+    problem: "Excessive writebacks and latency bottlenecks on non-volatile memory (NVM) due to standard cache policy limits.",
+    constraints: "Must execute within strict hardware cycle counts using the ChampSim simulator.",
+    tradeoffs: "Designed slightly complex eviction computations to prioritize NVM longevity and reduce write fatigue.",
+    architecture: "Custom eviction algorithms (P1 and P2) integrating access recency, frequency, and channel priority.",
+    scale: "Evaluated across benchmark traces on a simulated 4-channel hybrid memory system.",
+    impact: "Reduced NVM writebacks while maintaining instructions-per-cycle, boosting LLC hit rate by up to 5%.",
+    github: "https://github.com/33SN0W/champsim",
+    deck: "https://raw.githubusercontent.com/33SN0W/champsim/main/endsem_presentation_prateek.pdf"
   },
   {
     id: "ktm", // Maps to MotoGP V4 engine poster
-    name: "Microsoft Fabric Workflows",
-    tech: "Synapse // PySpark // CI-CD",
-    desc: "Enterprise data engineering pipelines, DP-600 certified warehouse deployment.",
-    problem: "High ingestion latency and fragmented structures across transactional workloads.",
-    constraints: "Extreme transaction scale (200M+ rows processed daily) and schema drift.",
-    tradeoffs: "Utilized Fabric direct-lake semantic modeling to bypass traditional import refresh cycles.",
-    architecture: "Incremental PySpark staging notebooks loading compressed partitioned Delta Lakes.",
-    scale: "Ingests 200M+ rows/day from fragmented transactional VM telemetry nodes.",
-    impact: "40% database sync latency reduction."
+    name: "Academic Domain Predictor",
+    tech: "TensorFlow // sentence-transformers // NLP",
+    desc: "Research discovery platform with semantic paper recommendation and multi-label academic classification.",
+    problem: "High manual overhead and friction in academic literature discovery and categorization.",
+    constraints: "Requires highly accurate multi-label classification of overlapping scientific domains.",
+    tradeoffs: "Used sentence-transformers (all-MiniLM-L6-v2) for embeddings to balance search speed and semantic accuracy.",
+    architecture: "TensorFlow deep neural networks combined with cosine similarity search engines.",
+    scale: "Processes high-dimensional paper embeddings for real-time semantic query matching.",
+    impact: "Achieved 99.4% categorical classification accuracy and instant recommendation retrieval.",
+    github: "https://github.com/33SN0W/nlp_project",
+    deck: "https://raw.githubusercontent.com/33SN0W/nlp_project/main/Research%20Literature%20Recommendation%20System%20and%20Academic%20Domain%20Predictor.pdf"
   }
 ];
 
@@ -113,19 +119,19 @@ function PaddockSection() {
       <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontFamily: "var(--font-mono)", fontSize: "10px", lineHeight: "1.4" }}>
         <div>
           <span style={{ color: "var(--steel)" }}>EDUCATION:</span>
-          <span style={{ color: "#ffffff", marginLeft: "12px" }}>Incoming IIM Mumbai MBA (Systems & Strategy) // B.Tech CS IIIT Guwahati</span>
+          <span style={{ color: "#ffffff", marginLeft: "12px" }}>MBA Core, IIM Mumbai (2026-28) // B.Tech CSE, IIIT Guwahati (2021-25)</span>
         </div>
         <div>
           <span style={{ color: "var(--steel)" }}>CORE STACK:</span>
-          <span style={{ color: "var(--orange)", marginLeft: "12px" }}>PySpark // Azure Synapse // Python // Go // SQL</span>
+          <span style={{ color: "var(--orange)", marginLeft: "12px" }}>C++ // Python // SQL // PySpark // Azure Synapse // TensorFlow</span>
         </div>
         <div>
           <span style={{ color: "var(--steel)" }}>SCALE INDEX:</span>
-          <span style={{ color: "#ffffff", marginLeft: "12px" }}>200M+ daily records // 40% latency reductions // CI-CD automations</span>
+          <span style={{ color: "#ffffff", marginLeft: "12px" }}>200M+ telemetry rows/day // 75% ETL runtime cut // DP-600 & DP-700</span>
         </div>
         <div>
           <span style={{ color: "var(--steel)" }}>DIAGNOSTIC:</span>
-          <span style={{ color: "#41ff72", marginLeft: "12px" }}>[TELEMETRY PIPELINES OPERATIONAL]</span>
+          <span style={{ color: "#41ff72", marginLeft: "12px" }}>[SYSTEM METRICS OPERATIONAL // CELL NOMINAL]</span>
         </div>
       </div>
 
@@ -141,10 +147,10 @@ function GarageSection() {
   const visible = useSectionVisibility("GARAGE");
 
   const skills = [
-    { cat: "PROPULSION (Backend)", items: [{ name: "PySpark", color: "#ffd500" }, { name: "Python", color: "#ffd500" }, { name: "Go", color: "#41ff72" }, { name: "SQL", color: "#41ff72" }, { name: "KQL", color: "#41ff72" }] },
-    { cat: "CHASSIS (Frontend)", items: [{ name: "React", color: "#41ff72" }, { name: "React Native", color: "#41ff72" }, { name: "TypeScript", color: "#41ff72" }, { name: "Tailwind CSS", color: "#41ff72" }] },
-    { cat: "AERODYNAMICS (Cloud)", items: [{ name: "Microsoft Fabric", color: "#ffd500" }, { name: "Azure Synapse", color: "#ffd500" }, { name: "AWS", color: "#ffd500" }] },
-    { cat: "TELEMETRY (Automation)", items: [{ name: "CI/CD Devops", color: "#ffd500" }, { name: "Git", color: "#41ff72" }, { name: "Docker", color: "#ffb36b" }] }
+    { cat: "PROPULSION (Data & Systems)", items: [{ name: "PySpark", color: "#ffd500" }, { name: "Python", color: "#ffd500" }, { name: "SQL", color: "#ffd500" }, { name: "C++", color: "#41ff72" }, { name: "KQL", color: "#41ff72" }, { name: "Data Warehousing", color: "#41ff72" }] },
+    { cat: "CHASSIS (Full Stack & UX)", items: [{ name: "Next.js", color: "#ffd500" }, { name: "React", color: "#41ff72" }, { name: "React Native", color: "#41ff72" }, { name: "TypeScript", color: "#41ff72" }, { name: "Flask", color: "#41ff72" }, { name: "HTML/CSS", color: "#41ff72" }, { name: ".NET", color: "#ffb36b" }] },
+    { cat: "AERODYNAMICS (Cloud Platforms)", items: [{ name: "Microsoft Fabric", color: "#ffd500" }, { name: "Azure Synapse", color: "#ffd500" }, { name: "Azure DevOps", color: "#ffd500" }, { name: "CI/CD", color: "#ffd500" }, { name: "Azure Data Factory", color: "#41ff72" }, { name: "ADLS", color: "#41ff72" }] },
+    { cat: "TELEMETRY (Developer Tools & Sim)", items: [{ name: "Git / GitHub", color: "#41ff72" }, { name: "Docker", color: "#41ff72" }, { name: "Unity", color: "#ffb36b" }, { name: "JIRA", color: "#ffb36b" }, { name: "AntiGravity", color: "#ffb36b" }] }
   ];
 
   return (
@@ -204,7 +210,7 @@ function GarageSection() {
 // ─── BUILD LOG (PROJECT DEPLOYMENTS) SECTION ───────────
 function BuildLogSection() {
   const visible = useSectionVisibility("BUILD_LOG");
-  const { setFocusedPoster, activeProjectIndex, setActiveProjectIndex, playAudio } = usePortfolio();
+  const { setFocusedProjectIndex, activeProjectIndex, setActiveProjectIndex, playAudio } = usePortfolio();
 
   return (
     <div
@@ -212,7 +218,7 @@ function BuildLogSection() {
       style={{
         top: "14vh",
         left: "6vw",
-        maxWidth: "480px",
+        maxWidth: "520px",
       }}
     >
       <div className="tech-panel-screws" />
@@ -222,7 +228,7 @@ function BuildLogSection() {
         <div className="panel-subtitle">TECHNICAL SPECIFICATIONS & TRADEOFFS</div>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
         {PROJECTS_DATA.map((proj, idx) => {
           const isSelected = activeProjectIndex === idx;
 
@@ -230,40 +236,74 @@ function BuildLogSection() {
             <div
               key={idx}
               style={{
-                borderLeft: isSelected ? "2px solid var(--orange)" : "2px solid #1c1c1f",
-                paddingLeft: "12px",
+                borderLeft: isSelected ? "3px solid var(--orange)" : "3px solid #1c1c1f",
+                padding: "16px 18px",
+                background: isSelected ? "rgba(255, 40, 0, 0.02)" : "transparent",
+                borderBottom: "1px solid #151518",
                 cursor: "pointer",
-                transition: "border-color 0.2s ease"
+                transition: "all 0.25s ease",
               }}
               onClick={() => {
                 setActiveProjectIndex(idx);
                 playAudio('chirp');
               }}
+              onMouseOver={(e) => {
+                if (!isSelected) e.currentTarget.style.borderLeftColor = "rgba(255, 40, 0, 0.4)";
+              }}
+              onMouseOut={(e) => {
+                if (!isSelected) e.currentTarget.style.borderLeftColor = "#1c1c1f";
+              }}
             >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: "bold", color: isSelected ? "#ffffff" : "var(--titanium)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: "13px", fontWeight: "bold", color: isSelected ? "#ffffff" : "var(--titanium)" }}>
                   {proj.name}
                 </span>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: "8.5px", color: "var(--steel)" }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: "9.5px", color: "var(--steel)" }}>
                   {proj.tech}
                 </span>
               </div>
-              <p style={{ fontSize: "10px", color: "var(--steel)", lineHeight: "1.35", marginTop: "3px" }}>
+              <p style={{ fontSize: "11px", color: "var(--steel)", lineHeight: "1.4", marginTop: "6px" }}>
                 {proj.desc}
               </p>
               
               {isSelected && (
-                <div style={{ marginTop: "8px", borderTop: "1px dashed #222", paddingTop: "8px", fontFamily: "var(--font-mono)", fontSize: "8.5px", color: "var(--steel)", display: "flex", flexDirection: "column", gap: "3px" }}>
+                <div style={{ marginTop: "12px", borderTop: "1px dashed #222", paddingTop: "10px", fontFamily: "var(--font-mono)", fontSize: "9.5px", color: "var(--steel)", display: "flex", flexDirection: "column", gap: "5px" }}>
                   <div><span style={{ color: "var(--orange)" }}>CONSTRAINTS:</span> {proj.constraints}</div>
                   <div><span style={{ color: "var(--orange)" }}>TRADEOFFS:</span> {proj.tradeoffs}</div>
                   <div><span style={{ color: "#ffffff" }}>ARCHITECTURE:</span> {proj.architecture}</div>
                   
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "6px" }}>
+                  {/* Direct links in details */}
+                  <div style={{ display: "flex", gap: "12px", marginTop: "6px" }}>
+                    {proj.github && (
+                      <a
+                        href={proj.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ color: "var(--orange)", textDecoration: "none", borderBottom: "1px solid rgba(255, 40, 0, 0.3)" }}
+                      >
+                        [GITHUB ↗]
+                      </a>
+                    )}
+                    {proj.deck && (
+                      <a
+                        href={proj.deck}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ color: "var(--orange)", textDecoration: "none", borderBottom: "1px solid rgba(255, 40, 0, 0.3)" }}
+                      >
+                        [PRESENTATION DECK ↗]
+                      </a>
+                    )}
+                  </div>
+
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "10px", borderTop: "1px solid #1a1a1d", paddingTop: "8px" }}>
                     <span style={{ color: "#41ff72" }}>SCALE: {proj.scale}</span>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        setFocusedPoster(proj.id);
+                        setFocusedProjectIndex(idx);
                         playAudio('sweep');
                       }}
                       style={{
@@ -271,8 +311,8 @@ function BuildLogSection() {
                         border: "1px solid var(--orange)",
                         color: "var(--orange)",
                         fontFamily: "var(--font-mono)",
-                        fontSize: "8px",
-                        padding: "2px 6px",
+                        fontSize: "9px",
+                        padding: "3px 10px",
                         cursor: "pointer",
                         borderRadius: "0px",
                         transition: "all 0.2s ease"
@@ -321,21 +361,35 @@ function RaceHistorySection() {
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "14px", marginTop: "4px" }}>
-        {/* MAQ Software Telemetry Log */}
+        {/* IIM Mumbai Strategy Stop */}
         <div style={{ borderRight: "2px solid var(--orange)", paddingRight: "12px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: "bold", flexDirection: "row-reverse" }}>
-            <span style={{ color: "#ffffff" }}>MAQ SOFTWARE // PIT STOP 01</span>
-            <span style={{ color: "var(--steel)" }}>2025 - PRESENT</span>
+            <span style={{ color: "#ffffff" }}>IIM MUMBAI // STRATEGY CORE</span>
+            <span style={{ color: "var(--steel)" }}>2026 - 2028</span>
           </div>
           <div style={{ color: "var(--orange)", fontFamily: "var(--font-mono)", fontSize: "8.5px", marginTop: "2px" }}>
-            ROLE: SOFTWARE ENGINEER I // BIG DATA SYSTEMS
+            PROGRAM: MBA CORE // SYSTEMS & STRATEGY
+          </div>
+          <div style={{ fontSize: "9.5px", color: "var(--steel)", fontFamily: "var(--font-mono)", marginTop: "4px", lineHeight: "1.4" }}>
+            Incoming candidate focusing on operations strategy, supply chain management, data-driven forecasting, and operations research.
+          </div>
+        </div>
+
+        {/* MAQ Software Telemetry Log */}
+        <div style={{ borderRight: "2px solid var(--steel)", paddingRight: "12px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: "bold", flexDirection: "row-reverse" }}>
+            <span style={{ color: "#ffffff" }}>MAQ SOFTWARE // PIT STOP 01</span>
+            <span style={{ color: "var(--steel)" }}>2025 - 2026</span>
+          </div>
+          <div style={{ color: "var(--orange)", fontFamily: "var(--font-mono)", fontSize: "8.5px", marginTop: "2px" }}>
+            ROLE: SOFTWARE ENGINEER 1 (PROMOTED FROM ASSOCIATE SE)
           </div>
           
           <div style={{ background: "#09090b", border: "1px solid #151518", padding: "8px", borderRadius: "0px", marginTop: "6px", fontFamily: "var(--font-mono)", fontSize: "9px", color: "var(--steel)", display: "flex", flexDirection: "column", gap: "3px", textAlign: "right" }}>
-            <div>200M+ transaction rows/day <span style={{ color: "#fff" }}>:DATA VOLUME</span></div>
-            <div>Automated Azure Synapse notebooks <span style={{ color: "#fff" }}>:ARCHITECTURE</span></div>
-            <div>End-to-end telemetry pipeline migration <span style={{ color: "#fff" }}>:OWNERSHIP</span></div>
-            <div>40% database sync latency reduction <span style={{ color: "#41ff72" }}>:BUSINESS IMPACT</span></div>
+            <div>200M+ VM telemetry rows/day <span style={{ color: "#fff" }}>:DATA VOLUME</span></div>
+            <div>Fabric, Synapse, PySpark & KQL <span style={{ color: "#fff" }}>:ARCHITECTURE</span></div>
+            <div>Ingestion frameworks & ETL workflows <span style={{ color: "#fff" }}>:OWNERSHIP</span></div>
+            <div>75% workflow runtime reduction // 70% incident drop <span style={{ color: "#41ff72" }}>:IMPACT</span></div>
           </div>
         </div>
 
@@ -346,10 +400,10 @@ function RaceHistorySection() {
             <span style={{ color: "var(--steel)" }}>2021 - 2025</span>
           </div>
           <div style={{ color: "var(--orange)", fontFamily: "var(--font-mono)", fontSize: "8.5px", marginTop: "2px" }}>
-            PROGRAM: B.TECH COMPUTER SCIENCE
+            PROGRAM: B.TECH COMPUTER SCIENCE & ENGINEERING
           </div>
           <div style={{ fontSize: "9.5px", color: "var(--steel)", fontFamily: "var(--font-mono)", marginTop: "4px", lineHeight: "1.4" }}>
-            Focused core computational work on memory allocation layout design, database indexing bounds, distributed algorithms, and regression modeling.
+            Core computational work on DRAM/NVM cache replacement policies (ChampSim), NLP text classification architectures, and distributed ledger systems.
           </div>
         </div>
       </div>
@@ -428,7 +482,7 @@ function PitWallRadioSection() {
         setTimeout(() => {
           setIsExporting(false);
           playAudio('chirp');
-          window.open("/resume.pdf", "_blank");
+          window.open("/Prateek_resume.pdf", "_blank");
         }, 300);
       }
       setExportProgress(current);
@@ -480,7 +534,7 @@ function PitWallRadioSection() {
           </div>
         ) : (
           <a
-            href="/resume.pdf"
+            href="/Prateek_resume.pdf"
             onClick={handleDownloadClick}
             className="link-subtle"
             style={{ borderBottom: "1px solid var(--orange)", fontFamily: "var(--font-mono)", fontSize: "10px", color: "var(--orange)" }}
@@ -520,50 +574,54 @@ function PosterModal() {
       case "journey":
         return {
           title: "SYSTEMS ENGINEERING PATHWAY // CAREER JOURNEY",
-          subtitle: "Prateek // IIIT Guwahati CS (Graduated 2025)",
+          subtitle: "Prateek // Systems Strategy & Data Ingestion",
           sections: [
             {
-              label: "2021 — CS INCEPTION",
-              value: "Entered IIIT Guwahati. Developed core systems concepts: pointer manipulation, thread safety, process trees, and cache-aligned layouts in C/C++."
+              label: "2021 — CS INCEPTION (IIIT GUWAHATI)",
+              value: "B.Tech CSE entry. Developed core systems concepts: pointer manipulation, thread safety, process trees, and cache-aligned memory layouts in C++."
             },
             {
               label: "2023 — SCALING PREDICTIONS (YOUTUBE AD RECOMMENDER)",
-              value: "Engineered high-concurrency scraping scripts for YouTube ad metrics. Built TF-IDF vectorizers and Support Vector Machine classifiers, optimizing video recommendation accuracy to 87%."
+              value: "Engineered NLP text preprocessing and lemmatization pipelines. Built TF-IDF and SVM classifiers to achieve 98% accuracy on video recommendation."
             },
             {
-              label: "2024 — CROSS-PLATFORM MOBILE DIAGNOSTICS (HEALTH APP)",
-              value: "Created a React Native client backed by a Flask machine learning inference server. Integrated medical symptom matching engines and low-latency chart plotting."
+              label: "2024 — ARCHITECTURE & CORE OPTIMIZATION",
+              value: "Designed hybrid memory-aware cache policies over LRU (ChampSim), improving LLC hit rates by 5%. Built academic research discovery engines using sentence-transformers."
             },
             {
-              label: "2025 — CLOUD SYSTEM AUTOMATION (MAQ SOFTWARE)",
-              value: "Automated large-scale Spark ETL processing pipelines. Built Microsoft Fabric data warehouses, Synapse workspaces, and robust multi-stage CI/CD pipelines in Azure DevOps. Certified DP-600 Synapse Analytics Engineer."
+              label: "2025 - 2026 — CLOUD TELESCOPING & BIG DATA (MAQ SOFTWARE)",
+              value: "Software Engineer 1. Built PySpark ingestion pipelines handling 200M+ rows/day. Reduced runtime execution from 12h to 3h. Certified DP-600 and DP-700."
+            },
+            {
+              label: "2026 - 2028 — STRATEGIC MANAGEMENT (IIM MUMBAI)",
+              value: "MBA Core. Blending deep computational expertise with systems operations, supply chain strategy, and decision models."
             }
           ]
         };
       case "resume":
         return {
           title: "ENGINEERING SPEC SHEET // RESUME SUMMARY",
-          subtitle: "Prateek // Software Engineer & Data Architect",
+          subtitle: "Prateek // Software Engineer & Systems Strategist",
           sections: [
             {
-              label: "PROPULSION SYSTEM (BACKEND & PIPELINES)",
-              value: "PySpark, Python, Go, SQL, KQL, REST APIs, parallel ingestion pipelines."
+              label: "PROPULSION SYSTEM (LANGUAGES & DATA)",
+              value: "C++, C#, Java, Python, SQL, KQL, PySpark, Data Warehousing, ETL Pipelines."
             },
             {
-              label: "CHASSIS & INSTRUMENTATION (FRONTEND)",
-              value: "React, React Native, TypeScript, Tailwind CSS, Framer Motion, HTML5/Canvas."
+              label: "CHASSIS & INSTRUMENTATION (FULL STACK)",
+              value: "Next.js, React, React Native, Node.js, Flask, TypeScript, HTML/CSS, .NET."
             },
             {
-              label: "AERODYNAMICS (CLOUD INFRASTRUCTURE)",
-              value: "Microsoft Fabric, Azure Synapse Analytics, Azure DevOps CI/CD, AWS, Docker."
+              label: "AERODYNAMICS (CLOUD & DEVOPS)",
+              value: "Microsoft Fabric, Azure Synapse, Azure Data Factory, ADLS, Azure DevOps, CI/CD, Docker."
             },
             {
               label: "WORK EXPERIENCE",
-              value: "Software Engineer 1 @ MAQ Software (2025 - Present) // Associate Software Engineer @ MAQ Software (Jan - Jul 2025)"
+              value: "Software Engineer 1 (Associate SE -> SE 1) @ MAQ Software (Jan 2025 - May 2026) // Noida, India"
             },
             {
               label: "EDUCATION & CERTIFICATION",
-              value: "B.Tech in Computer Science @ IIIT Guwahati (2021 - 2025) // DP-600 Microsoft Certified Fabric Analytics Engineer"
+              value: "MBA Core @ IIM Mumbai (2026 - 2028) // B.Tech CSE @ IIIT Guwahati (2021 - 2025) // Certified DP-600 & DP-700"
             }
           ]
         };
@@ -581,8 +639,8 @@ function PosterModal() {
               value: "Molded honeycomb carbon-fiber composite. Pull-rod front suspension, push-rod rear suspension. Advanced high-rake ground effect venturi tunnels."
             },
             {
-              label: "HEALTH APP NARRATIVE ALIGNMENT",
-              value: "Selected as the structural blueprint for the Health App & Diagnostics engine. Translating complex system parameters into reliable, robust diagnostics logic."
+              label: "HYBRID CACHE POLICY ALIGNMENT",
+              value: "Selected as the architectural blueprint for the Hybrid Memory-Aware Cache Policy. Translating complex power recovery parameters into high-efficiency memory access recency and eviction algorithms."
             }
           ]
         };
@@ -600,8 +658,8 @@ function PosterModal() {
               value: "Triangulated chromoly steel trellis frame. WP pressurized forks, aluminum swingarm. Kinematic link rear damper."
             },
             {
-              label: "FABRIC WORKFLOWS ALIGNMENT",
-              value: "Selected as the blueprint for Microsoft Fabric Big Data Pipelines. High-speed, high-density throughput handling 200M+ rows daily with mechanical coordination."
+              label: "ACADEMIC RECOMMENDATION ALIGNMENT",
+              value: "Selected as the blueprint for the NLP Research Recommendation engine. High-speed, multi-dimensional semantic retrieval resembling the pneumatic control valves of a V4 power unit."
             }
           ]
         };
@@ -635,7 +693,7 @@ function PosterModal() {
             },
             {
               label: "YOUTUBE RECOMMENDER ALIGNMENT",
-              value: "Selected as the blueprint for the YouTube Ad Recommender. Active optimization and feature vectorization to adapt to dynamic textual sparse conditions at 1000Hz."
+              value: "Selected as the blueprint for the YouTube Ad Recommender. Active optimization and NLP feature engineering to adapt to dynamic textual conditions under CPU latency bounds."
             }
           ]
         };
@@ -814,10 +872,10 @@ function BikeTelemetryPanel() {
     },
     suspension: {
       title: "WP KINEMATIC SUSPENSION LINKAGE // LOGS",
-      subtitle: "Distributed Systems Coordination",
-      skills: ["Distributed Systems", "RPC Protocols", "Consensus Algorithms"],
+      subtitle: "Memory & Cache Optimization",
+      skills: ["Cache Policies", "LRU Eviction", "ChampSim Simulator", "C++"],
       status: "MOTOR: N/A // BATTERY: N/A // WEIGHT: 8 kg // EFFICIENCY: WP Pressurized",
-      buildNotes: "Calibrated rebound dampening. Development Log: Dampers buffer high frequency traffic spikes. Lessons Learned: Spring rates act like queue throttles."
+      buildNotes: "Calibrated rebound dampening. Development Log: Dampers buffer latency spike access rates. Lessons Learned: Rebound frequencies act like replacement eviction bounds."
     },
     rear_section: {
       title: "REAR TRACTION & STORAGE HUB // METRICS",
@@ -1149,7 +1207,7 @@ function LiveTelemetryStrip() {
       {/* Recruiter Quick Actions */}
       <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
         <a 
-          href="/resume.pdf" 
+          href="/Prateek_resume.pdf" 
           target="_blank" 
           rel="noopener noreferrer" 
           style={{ 
@@ -1200,6 +1258,213 @@ function LiveTelemetryStrip() {
   );
 }
 
+// ─── PROJECT DETAILS MODAL ──────────────────────────────
+function ProjectModal() {
+  const { focusedProjectIndex, setFocusedProjectIndex, playAudio } = usePortfolio();
+  const [animateProgress, setAnimateProgress] = useState(0);
+
+  useEffect(() => {
+    if (focusedProjectIndex === null) return;
+    setAnimateProgress(0);
+    let curr = 0;
+    const interval = setInterval(() => {
+      curr += 5;
+      if (curr >= 100) {
+        curr = 100;
+        clearInterval(interval);
+      }
+      setAnimateProgress(curr);
+    }, 16);
+    return () => clearInterval(interval);
+  }, [focusedProjectIndex]);
+
+  if (focusedProjectIndex === null) return null;
+
+  const data = PROJECTS_DATA[focusedProjectIndex];
+  if (!data) return null;
+
+  return (
+    <div
+      onClick={() => setFocusedProjectIndex(null)}
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(5, 5, 5, 0.82)",
+        backdropFilter: "blur(8px)",
+        zIndex: 9999,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "24px",
+        pointerEvents: "auto",
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          width: "100%",
+          maxWidth: "600px",
+          background: "#08080a",
+          border: "1px solid var(--orange)",
+          borderRadius: "0px",
+          padding: "24px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "18px",
+          boxShadow: "0 0 32px rgba(255, 40, 0, 0.15)",
+          maxHeight: "90vh",
+          overflowY: "auto"
+        }}
+      >
+        <div style={{ borderBottom: "1px solid #222", paddingBottom: "10px" }}>
+          <div style={{ color: "var(--orange)", fontFamily: "var(--font-mono)", fontSize: "9px", letterSpacing: "0.15em" }}>
+            PROJECT SPECIFICATION REPORT
+          </div>
+          <h2 style={{ color: "#ffffff", fontFamily: "var(--font-mono)", fontSize: "14px", marginTop: "4px", fontWeight: "bold" }}>
+            {data.name.toUpperCase()}
+          </h2>
+          <div style={{ color: "var(--steel)", fontFamily: "var(--font-mono)", fontSize: "10px", marginTop: "2px" }}>
+            TECH STACK // {data.tech}
+          </div>
+          <div style={{ color: "var(--orange)", fontFamily: "var(--font-mono)", fontSize: "8.5px", marginTop: "6px", letterSpacing: "0.05em" }}>
+            TELEMETRY SCANNING: {Math.round(animateProgress)}% [{ "█".repeat(Math.floor(animateProgress / 10)).padEnd(10, "░") }]
+          </div>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+          <div style={{ borderBottom: "1px solid #141416", paddingBottom: "10px" }}>
+            <div style={{ color: "var(--titanium)", fontFamily: "var(--font-mono)", fontSize: "9.5px", fontWeight: "bold", textTransform: "uppercase" }}>
+              OVERVIEW
+            </div>
+            <p style={{ color: "var(--steel)", fontSize: "11px", lineHeight: "1.45", marginTop: "4px", fontFamily: "var(--font-mono)" }}>
+              {data.desc}
+            </p>
+          </div>
+
+          <div style={{ borderBottom: "1px solid #141416", paddingBottom: "10px" }}>
+            <div style={{ color: "var(--titanium)", fontFamily: "var(--font-mono)", fontSize: "9.5px", fontWeight: "bold", textTransform: "uppercase" }}>
+              PROBLEM & CONSTRAINTS
+            </div>
+            <p style={{ color: "var(--steel)", fontSize: "11px", lineHeight: "1.45", marginTop: "4px", fontFamily: "var(--font-mono)" }}>
+              <strong>PROBLEM:</strong> {data.problem}<br />
+              <strong style={{ color: "var(--orange)" }}>CONSTRAINTS:</strong> {data.constraints}
+            </p>
+          </div>
+
+          <div style={{ borderBottom: "1px solid #141416", paddingBottom: "10px" }}>
+            <div style={{ color: "var(--titanium)", fontFamily: "var(--font-mono)", fontSize: "9.5px", fontWeight: "bold", textTransform: "uppercase" }}>
+              ARCHITECTURE & TRADEOFFS
+            </div>
+            <p style={{ color: "var(--steel)", fontSize: "11px", lineHeight: "1.45", marginTop: "4px", fontFamily: "var(--font-mono)" }}>
+              <strong>ARCHITECTURE:</strong> {data.architecture}<br />
+              <strong style={{ color: "var(--orange)" }}>TRADEOFFS:</strong> {data.tradeoffs}
+            </p>
+          </div>
+
+          <div>
+            <div style={{ color: "var(--titanium)", fontFamily: "var(--font-mono)", fontSize: "9.5px", fontWeight: "bold", textTransform: "uppercase" }}>
+              METRICS & SYSTEM SCALE
+            </div>
+            <p style={{ color: "var(--steel)", fontSize: "11px", lineHeight: "1.45", marginTop: "4px", fontFamily: "var(--font-mono)" }}>
+              <strong>SCALE:</strong> {data.scale}<br />
+              <strong style={{ color: "#41ff72" }}>IMPACT:</strong> {data.impact}
+            </p>
+          </div>
+        </div>
+
+        {/* Links Actions */}
+        <div style={{ display: "flex", gap: "12px", borderTop: "1px solid #222", paddingTop: "14px", marginTop: "6px" }}>
+          {data.github && (
+            <a
+              href={data.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                flex: 1,
+                textAlign: "center",
+                background: "rgba(255, 40, 0, 0.08)",
+                border: "1px solid var(--orange)",
+                color: "var(--orange)",
+                fontFamily: "var(--font-mono)",
+                fontSize: "11px",
+                padding: "8px 16px",
+                textDecoration: "none",
+                transition: "all 0.2s ease"
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = "var(--orange)";
+                e.currentTarget.style.color = "#ffffff";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = "rgba(255, 40, 0, 0.08)";
+                e.currentTarget.style.color = "var(--orange)";
+              }}
+            >
+              [OPEN GITHUB REPOSITORY ↗]
+            </a>
+          )}
+          {data.deck && (
+            <a
+              href={data.deck}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                flex: 1,
+                textAlign: "center",
+                background: "rgba(255, 40, 0, 0.08)",
+                border: "1px solid var(--orange)",
+                color: "var(--orange)",
+                fontFamily: "var(--font-mono)",
+                fontSize: "11px",
+                padding: "8px 16px",
+                textDecoration: "none",
+                transition: "all 0.2s ease"
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = "var(--orange)";
+                e.currentTarget.style.color = "#ffffff";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = "rgba(255, 40, 0, 0.08)";
+                e.currentTarget.style.color = "var(--orange)";
+              }}
+            >
+              [OPEN PRESENTATION DECK ↗]
+            </a>
+          )}
+        </div>
+
+        <div style={{ display: "flex", justifyContent: "flex-end", borderTop: "1px solid #222", paddingTop: "10px" }}>
+          <button
+            onClick={() => setFocusedProjectIndex(null)}
+            style={{
+              background: "transparent",
+              border: "1px solid var(--steel)",
+              color: "var(--titanium)",
+              fontFamily: "var(--font-mono)",
+              fontSize: "10px",
+              padding: "5px 14px",
+              cursor: "pointer",
+              borderRadius: "0px",
+              transition: "all 0.2s ease",
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.borderColor = "var(--orange)";
+              e.currentTarget.style.color = "#ffffff";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.borderColor = "var(--steel)";
+              e.currentTarget.style.color = "var(--titanium)";
+            }}
+          >
+            [CLOSE_SESSION]
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── OVERLAY ASSEMBLY ─────────────────────────────────
 export default function Overlay() {
   return (
@@ -1211,6 +1476,7 @@ export default function Overlay() {
       <RaceStrategySection />
       <PitWallRadioSection />
       <PosterModal />
+      <ProjectModal />
       <BikeTelemetryPanel />
       <HUDOverlay />
       <LiveTelemetryStrip />
