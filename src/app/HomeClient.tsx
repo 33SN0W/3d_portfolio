@@ -139,7 +139,11 @@ function StartLightsLoader({
           }}
         >
           {[0, 1, 2, 3, 4].map((i) => {
-            const isOn = !isLightsOut && lightsCount > i;
+            const isRed = !isLightsOut && lightsCount > i;
+            const isGreen = isLightsOut && !assetsReady;
+            const lightColor = isRed ? "#ff0000" : isGreen ? "#00ff88" : "#222";
+            const lightShadow = isRed ? "0 0 15px #ff0000" : isGreen ? "0 0 15px #00ff88" : "none";
+
             return (
               <div key={i} style={{ display: "flex", flexDirection: "column", gap: "6px", alignItems: "center" }}>
                 <div
@@ -147,8 +151,8 @@ function StartLightsLoader({
                     width: "20px",
                     height: "20px",
                     borderRadius: "50%",
-                    background: isOn ? "#ff0000" : "#222",
-                    boxShadow: isOn ? "0 0 15px #ff0000" : "none",
+                    background: lightColor,
+                    boxShadow: lightShadow,
                   }}
                 />
                 <div
@@ -156,8 +160,8 @@ function StartLightsLoader({
                     width: "20px",
                     height: "20px",
                     borderRadius: "50%",
-                    background: isOn ? "#ff0000" : "#222",
-                    boxShadow: isOn ? "0 0 15px #ff0000" : "none",
+                    background: lightColor,
+                    boxShadow: lightShadow,
                   }}
                 />
               </div>
