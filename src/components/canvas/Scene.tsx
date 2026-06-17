@@ -13,7 +13,6 @@ import { Canvas } from "@react-three/fiber";
 import Camera from "./Camera";
 import Lighting from "./Lighting";
 import GroundPlane from "./GroundPlane";
-import HeroSculpture from "./HeroSculpture";
 import Workbench from "./Workbench";
 import KTM from "./KTM";
 import { PortfolioContext } from "@/providers/PortfolioProvider";
@@ -46,7 +45,6 @@ export default function Scene() {
           <Lighting />
           <GroundPlane />
           <Suspense fallback={null}>
-            <HeroSculpture />
             <Workbench />
             <KTM />
           </Suspense>

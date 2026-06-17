@@ -4,16 +4,6 @@ ROOT
 
         Ambient Audio
 
-        Hero Sculpture
-
-            Brake Rotor
-
-            Trellis Geometry
-
-            Triple Clamp
-
-            Suspension
-
     Workbench
 
         Notebook
