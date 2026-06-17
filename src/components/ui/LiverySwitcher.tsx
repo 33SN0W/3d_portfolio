@@ -4,7 +4,11 @@ import { useState, useRef, useEffect } from "react";
 import { usePortfolio } from "@/providers/PortfolioProvider";
 import { LIVERIES, type LiveryType } from "@/config/colors";
 
-const LIVERY_KEYS = Object.keys(LIVERIES) as LiveryType[];
+const LIVERY_KEYS = (Object.keys(LIVERIES) as LiveryType[]).sort((a, b) => {
+  if (a === "ktm") return -1;
+  if (b === "ktm") return 1;
+  return LIVERIES[a].label.localeCompare(LIVERIES[b].label);
+});
 
 export default function LiverySwitcher() {
   const { livery, setLivery, playAudio } = usePortfolio();

@@ -104,7 +104,7 @@ export function PortfolioProvider({ children }: { children: ReactNode }) {
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const [focusedPoster, setFocusedPoster] = useState<string | null>(null);
   const [focusedProjectIndex, setFocusedProjectIndex] = useState<number | null>(null);
-  const [livery, setLivery] = useState<LiveryType>("ducati");
+  const [livery, setLivery] = useState<LiveryType>("ktm");
   const [activeBikePart, setActiveBikePart] = useState<'frame' | 'engine' | 'suspension' | 'rear_section' | 'electrical' | null>(null);
   const [isMuted, setIsMuted] = useState(false);
   const isMutedRef = useRef(isMuted);
