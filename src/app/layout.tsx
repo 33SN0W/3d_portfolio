@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SITE_NAME, SITE_URL, VALUE_PROPOSITION } from "@/config/site";
+import { Analytics } from "@vercel/analytics/next";
 
 const description =
   "A space that has existed for years before you arrived. Software engineering, cloud architecture, and data systems.";
@@ -45,7 +46,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
