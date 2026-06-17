@@ -26,7 +26,7 @@ export default function CursorTrail() {
   const { livery } = usePortfolio();
   const reducedMotion = useReducedMotion();
 
-  const activeTheme = LIVERIES[livery] || LIVERIES.mclaren;
+  const activeTheme = LIVERIES[livery] || LIVERIES.ducati;
 
   useEffect(() => {
     if (reducedMotion) return;

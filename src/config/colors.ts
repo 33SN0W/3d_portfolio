@@ -65,14 +65,23 @@ export const palette = {
   orangeGlow: "#ff8a30",
 } as const;
 
-export type LiveryType = "mclaren" | "ferrari" | "ktm" | "camel" | "porsche";
+export type LiveryType =
+  | "ducati"
+  | "yamaha"
+  | "ktm"
+  | "gresini"
+  | "vr46"
+  | "pramac"
+  | "lcr";
 
 export const LIVERIES: Record<LiveryType, { color: string; glow: string; label: string }> = {
-  mclaren: { color: "#ff6900", glow: "#ff8a30", label: "MCLAREN PAPAYA" },
-  ferrari: { color: "#ff2800", glow: "#ff5033", label: "FERRARI ROSSO" },
-  ktm: { color: "#ff5000", glow: "#ff7c33", label: "KTM FACTORY" },
-  camel: { color: "#ffd500", glow: "#ffdf33", label: "CAMEL RACING" },
-  porsche: { color: "#d81e05", glow: "#ff3c14", label: "PORSCHE DESIGN" }
+  ducati: { color: "#e50000", glow: "#ff3333", label: "DUCATI LENOVO" },
+  yamaha: { color: "#004b93", glow: "#00a2ff", label: "MONSTER YAMAHA" },
+  ktm: { color: "#ff5000", glow: "#ff7c33", label: "RED BULL KTM" },
+  gresini: { color: "#8fa8ff", glow: "#a3b8eb", label: "GRESINI RACING" },
+  vr46: { color: "#dfff00", glow: "#f3ff80", label: "PERTAMINA VR46" },
+  pramac: { color: "#a000c8", glow: "#d030ff", label: "PRIMA PRAMAC" },
+  lcr: { color: "#008751", glow: "#00df85", label: "LCR HONDA" }
 };
 
 /** The clear color for the renderer. This is what darkness looks like. */
